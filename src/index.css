@@ -4917,3 +4917,674 @@ html.lenis, html.lenis body {
   color: #ff1133;
   font-weight: 700;
 }
+
+/* =========================================
+   STARK ARMORY UNIVERSE & SUIT VIEWER STYLES
+========================================= */
+.stark-armory-universe-page {
+  position: relative;
+  min-height: 100vh;
+  background: #000000;
+  padding-top: 80px;
+  padding-bottom: 90px;
+  overflow-x: hidden;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.armory-ambient-lab-aura {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 45% 45%, var(--suit-arc-glow, rgba(0, 229, 255, 0.15)) 0%, rgba(5, 10, 20, 0.4) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.6s ease;
+}
+
+.armory-showcase-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 48px 32px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 40px;
+  align-items: center;
+  flex: 1;
+}
+
+.armory-center-3d-viewport {
+  position: relative;
+  width: 100%;
+  height: 640px;
+  background: radial-gradient(circle at center, rgba(12, 24, 42, 0.5) 0%, rgba(2, 5, 10, 0.95) 75%);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), inset 0 0 80px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+.suit-viewer-canvas-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.suit-stage-transitioning {
+  opacity: 0.45;
+  filter: blur(4px);
+}
+
+.viewer-reticle-brackets {
+  position: absolute;
+  inset: 16px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.v-bracket {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--suit-arc-glow, rgba(0, 229, 255, 0.4));
+}
+.v-bracket.tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+.v-bracket.tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+.v-bracket.bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+.v-bracket.br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+
+/* Suit Master Controls */
+.suit-master-controls-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 25;
+  pointer-events: auto;
+}
+
+.suit-nav-pills {
+  display: flex;
+  gap: 10px;
+}
+
+.suit-arrow-btn {
+  padding: 10px 18px;
+  background: rgba(3, 8, 16, 0.85);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-white);
+  font-family: var(--font-orbitron);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+}
+
+.suit-arrow-btn:hover {
+  background: var(--suit-arc-glow, var(--arc-cyan));
+  color: #000000;
+  border-color: var(--suit-arc-glow, var(--arc-cyan));
+  box-shadow: 0 0 18px var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.suit-action-modes {
+  display: flex;
+  gap: 12px;
+}
+
+.suit-mode-btn {
+  font-size: 11px !important;
+  letter-spacing: 0.25em !important;
+  padding: 12px 24px !important;
+}
+
+/* Environmental HUD Overlays */
+.suit-hud-overlay-wrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.hud-top-left {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hud-lab-tag {
+  font-family: var(--font-rajdhani);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-cyan-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--suit-arc-glow, var(--arc-cyan));
+  box-shadow: 0 0 8px var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.hud-archive-counter {
+  font-family: var(--font-orbitron);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--text-silver);
+}
+
+.counter-curr {
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  font-weight: 800;
+}
+
+.hud-top-right {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.hud-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-family: var(--font-orbitron);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  border: 1px solid;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.status-active { color: #00ffaa; border-color: #00ffaa; }
+.status-archived { color: #ffd700; border-color: #ffd700; }
+.status-destroyed { color: #ff2233; border-color: #ff2233; }
+.status-standby { color: var(--text-muted); border-color: var(--text-muted); }
+
+.status-ping {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.hud-movie-tag {
+  font-family: var(--font-rajdhani);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+}
+
+.hud-bg-watermark {
+  position: absolute;
+  right: 5%;
+  bottom: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+}
+
+.watermark-brand {
+  font-family: var(--font-rajdhani);
+  font-size: 24px;
+  letter-spacing: 0.4em;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.watermark-model {
+  font-family: var(--font-cinzel);
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  line-height: 0.9;
+  color: var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.watermark-code {
+  font-family: var(--font-orbitron);
+  font-size: 18px;
+  letter-spacing: 0.3em;
+  color: #ffffff;
+}
+
+/* Hotspots Drawer */
+.suit-hotspots-hud-container {
+  position: absolute;
+  top: 60px;
+  left: 24px;
+  right: 24px;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.hotspots-hud-header {
+  font-family: var(--font-rajdhani);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.hotspots-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hotspot-hud-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(3, 8, 16, 0.85);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-silver);
+  font-family: var(--font-rajdhani);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.hotspot-hud-chip:hover,
+.hotspot-hud-chip-active {
+  background: var(--suit-arc-glow, var(--arc-cyan));
+  color: #000000;
+  border-color: var(--suit-arc-glow, var(--arc-cyan));
+  box-shadow: 0 0 15px var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.hs-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.hotspot-detail-drawer {
+  background: rgba(3, 8, 16, 0.95);
+  border: 1px solid var(--suit-arc-glow, var(--arc-cyan));
+  padding: 16px 20px;
+  max-width: 480px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95), 0 0 25px var(--suit-arc-glow, rgba(0, 229, 255, 0.2));
+  animation: drawerSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawerSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.drawer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.drawer-cat {
+  font-family: var(--font-orbitron);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  font-weight: 700;
+}
+
+.drawer-tel {
+  font-family: var(--font-rajdhani);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #ffd700;
+}
+
+.drawer-title {
+  font-family: var(--font-cinzel);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 4px;
+}
+
+.drawer-desc {
+  font-size: 12.5px;
+  color: var(--text-silver);
+  line-height: 1.55;
+}
+
+/* Specs Sidebar Card */
+.armory-specs-sidebar {
+  position: relative;
+  z-index: 10;
+}
+
+.suit-specs-sidebar-card {
+  background: rgba(3, 6, 12, 0.85);
+  border: 1px solid var(--border-subtle);
+  padding: 32px 28px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+}
+
+.specs-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.specs-model-pill {
+  font-family: var(--font-orbitron);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.specs-era-tag {
+  font-family: var(--font-rajdhani);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  padding: 2px 8px;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.specs-suit-title {
+  font-family: var(--font-cinzel);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--text-white);
+  margin-bottom: 2px;
+}
+
+.specs-designation-text {
+  font-family: var(--font-rajdhani);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: #ffd700;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.specs-description-p {
+  font-size: 12.5px;
+  color: var(--text-silver);
+  opacity: 0.85;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Futuristic Block Meters */
+.specs-meters-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.meter-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.m-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.m-label {
+  font-family: var(--font-rajdhani);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.m-val {
+  font-family: var(--font-orbitron);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-white);
+}
+
+.m-blocks-row {
+  display: flex;
+  gap: 4px;
+}
+
+.stat-block {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.stat-block-filled {
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  text-shadow: 0 0 6px var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.stat-block-empty {
+  color: rgba(255, 255, 255, 0.12);
+}
+
+.specs-telemetry-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.tel-row {
+  display: flex;
+  gap: 8px;
+  font-family: var(--font-rajdhani);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.tel-k {
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  font-weight: 700;
+  width: 105px;
+  flex-shrink: 0;
+}
+
+.tel-v {
+  color: var(--text-silver);
+}
+
+.specs-weapons-area {
+  margin-bottom: 18px;
+}
+
+.w-title {
+  font-family: var(--font-rajdhani);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.w-badges-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.weapon-badge {
+  font-family: var(--font-rajdhani);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.specs-quick-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.qm-cell {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.qm-label {
+  font-family: var(--font-rajdhani);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  display: block;
+}
+
+.qm-value {
+  font-family: var(--font-orbitron);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-top: 2px;
+}
+
+/* Bottom Timeline Ribbon */
+.suit-timeline-bottom-rail {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.92);
+  border-top: 1px solid var(--border-subtle);
+  backdrop-filter: blur(16px);
+  padding: 10px 48px 12px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.timeline-rail-label {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-orbitron);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--suit-arc-glow, var(--arc-cyan));
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.rail-sub {
+  font-family: var(--font-rajdhani);
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.suit-timeline-pills-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  flex: 1;
+}
+
+.timeline-suit-pill {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  background: rgba(3, 8, 16, 0.7);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 68px;
+  transition: all 0.25s ease;
+}
+
+.timeline-suit-pill:hover,
+.timeline-suit-pill-active {
+  background: rgba(10, 22, 38, 0.95);
+  border-color: var(--suit-arc-glow, var(--arc-cyan));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 12px var(--suit-arc-glow, rgba(0, 229, 255, 0.3));
+}
+
+.pill-roman {
+  font-family: var(--font-cinzel);
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text-white);
+  line-height: 1;
+}
+
+.timeline-suit-pill-active .pill-roman {
+  color: var(--suit-arc-glow, var(--arc-cyan));
+}
+
+.pill-model {
+  font-family: var(--font-rajdhani);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.pill-active-glow {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--suit-arc-glow, var(--arc-cyan));
+  box-shadow: 0 0 8px var(--suit-arc-glow, var(--arc-cyan));
+}
