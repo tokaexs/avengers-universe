@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" fill="none">
+  <defs>
+    <radialGradient id="capGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4d88ff" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#4d88ff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#4d88ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#4d88ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0e1726" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background Aura -->
+  <circle cx="250" cy="300" r="220" fill="url(#capGlow)"/>
+  
+  <!-- Outer Concentric Vibranium Shield Rings -->
+  <circle cx="250" cy="300" r="200" stroke="#ff3344" stroke-width="8" opacity="0.85" filter="drop-shadow(0 0 10px rgba(255, 51, 68, 0.4))"/>
+  <circle cx="250" cy="300" r="175" stroke="#ffffff" stroke-width="8" opacity="0.9"/>
+  <circle cx="250" cy="300" r="150" stroke="#ff3344" stroke-width="8" opacity="0.85"/>
+  <circle cx="250" cy="300" r="125" fill="#08142a" stroke="#4d88ff" stroke-width="4" filter="drop-shadow(0 0 16px #4d88ff)"/>
+
+  <!-- Iconic 5-Point Center Star -->
+  <polygon points="250,205 264,248 309,248 273,274 286,317 250,291 214,317 227,274 191,248 236,248" fill="#ffffff" filter="drop-shadow(0 0 12px #ffffff)"/>
+
+  <!-- Radial Kinetic Shockwave Guides -->
+  <circle cx="250" cy="300" r="215" stroke="#4d88ff" stroke-width="1" stroke-dasharray="6 6" opacity="0.5"/>
+  <line x1="250" y1="60" x2="250" y2="90" stroke="#4d88ff" stroke-width="2"/>
+  <line x1="250" y1="510" x2="250" y2="540" stroke="#4d88ff" stroke-width="2"/>
+  <line x1="30" y1="300" x2="60" y2="300" stroke="#4d88ff" stroke-width="2"/>
+  <line x1="440" y1="300" x2="470" y2="300" stroke="#4d88ff" stroke-width="2"/>
+
+  <text x="250" y="555" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="#4d88ff" text-anchor="middle" opacity="0.85">VIBRANIUM ALLOY // KINETIC DISPERSAL</text>
+</svg>

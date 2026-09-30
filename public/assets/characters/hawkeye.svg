@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" fill="none">
+  <defs>
+    <radialGradient id="hawkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#b366ff" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#b366ff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="250" cy="300" r="220" fill="url(#hawkGlow)"/>
+
+  <!-- High Precision Reticle & Crosshair Rings -->
+  <circle cx="250" cy="300" r="190" stroke="#b366ff" stroke-width="1.5" stroke-dasharray="16 10" opacity="0.6"/>
+  <circle cx="250" cy="300" r="140" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+  <circle cx="250" cy="300" r="80" stroke="#b366ff" stroke-width="3" filter="drop-shadow(0 0 10px #b366ff)"/>
+  <circle cx="250" cy="300" r="10" fill="#ffffff" filter="drop-shadow(0 0 8px #ffffff)"/>
+
+  <!-- Recurve Bow Silhouette -->
+  <path d="M160 140 C190 220 190 380 160 460" stroke="#b366ff" stroke-width="5" fill="none" filter="drop-shadow(0 0 10px #b366ff)"/>
+  <line x1="160" y1="140" x2="160" y2="460" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Arrow Shaft & Piercing Broadhead -->
+  <line x1="130" y1="300" x2="380" y2="300" stroke="#ffffff" stroke-width="3"/>
+  <polygon points="380,285 415,300 380,315" fill="#b366ff" filter="drop-shadow(0 0 8px #b366ff)"/>
+  <polygon points="130,290 110,300 130,310" fill="#ffffff"/>
+
+  <!-- Crosshair Target Laser Guides -->
+  <line x1="250" y1="80" x2="250" y2="200" stroke="#b366ff" stroke-width="2"/>
+  <line x1="250" y1="400" x2="250" y2="520" stroke="#b366ff" stroke-width="2"/>
+
+  <text x="250" y="555" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="#b366ff" text-anchor="middle" opacity="0.85">PRECISION BALLISTICS // 100% HIT PROBABILITY</text>
+</svg>

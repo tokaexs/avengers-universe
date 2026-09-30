@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="tGlow2019" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#8000ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#020408" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="#03060c"/>
+  <circle cx="300" cy="200" r="180" fill="url(#tGlow2019)"/>
+
+  <!-- Quantum Tunnel Concentric Gateway -->
+  <circle cx="300" cy="200" r="160" stroke="#00e5ff" stroke-width="2" stroke-dasharray="16 8" opacity="0.6"/>
+  <circle cx="300" cy="200" r="120" stroke="#b366ff" stroke-width="2.5" opacity="0.8"/>
+  <circle cx="300" cy="200" r="80" stroke="#ffffff" stroke-width="3" filter="drop-shadow(0 0 16px #00e5ff)"/>
+
+  <!-- Nano-Gauntlet Snapping Focal Point -->
+  <polygon points="300,160 315,190 345,190 320,210 330,240 300,220 270,240 280,210 255,190 285,190" fill="#ffffff" filter="drop-shadow(0 0 15px #ffffff)"/>
+
+  <!-- Chrono Trajectory Vectors -->
+  <line x1="100" y1="200" x2="500" y2="200" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.5"/>
+  <line x1="300" y1="40" x2="300" y2="360" stroke="#b366ff" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.5"/>
+  
+  <text x="300" y="370" font-family="'Rajdhani', sans-serif" font-size="11" font-weight="700" letter-spacing="4" fill="#00e5ff" text-anchor="middle" opacity="0.9">CHRONO HEIST // FINAL ASSEMBLE 2019</text>
+</svg>

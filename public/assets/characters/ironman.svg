@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" fill="none">
+  <defs>
+    <radialGradient id="arcGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#00e5ff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#8ba0b5" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#101824" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Glow & Grid -->
+  <circle cx="250" cy="300" r="220" fill="url(#arcGlow)"/>
+  <circle cx="250" cy="300" r="210" stroke="#00e5ff" stroke-width="1" stroke-dasharray="8 6" opacity="0.4"/>
+  <circle cx="250" cy="300" r="160" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="250" cy="300" r="110" stroke="#00e5ff" stroke-width="2" stroke-dasharray="14 8" opacity="0.8"/>
+  
+  <!-- Helmet / Armor Blueprint Silhouette -->
+  <path d="M250 100 L340 180 L350 300 L310 440 L250 490 L190 440 L150 300 L160 180 Z" stroke="url(#metalGrad)" stroke-width="2.5" fill="none" opacity="0.85"/>
+  <path d="M250 130 L315 195 L320 280 L290 390 L250 430 L210 390 L180 280 L185 195 Z" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0, 229, 255, 0.03)"/>
+  
+  <!-- Faceplate Cheek & Jaw Armor Angles -->
+  <path d="M200 230 L250 250 L300 230" stroke="#00e5ff" stroke-width="2" opacity="0.8"/>
+  <path d="M220 340 L250 360 L280 340" stroke="#ffffff" stroke-width="2" opacity="0.9"/>
+  <path d="M250 360 L250 420" stroke="#00e5ff" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Slotted Glowing Eyes -->
+  <polygon points="195,270 235,275 230,285 198,282" fill="#00e5ff" filter="drop-shadow(0 0 8px #00e5ff)"/>
+  <polygon points="305,270 265,275 270,285 302,282" fill="#00e5ff" filter="drop-shadow(0 0 8px #00e5ff)"/>
+  
+  <!-- Central Unibeam Reactor -->
+  <circle cx="250" cy="300" r="45" fill="#030914" stroke="#00e5ff" stroke-width="3" filter="drop-shadow(0 0 15px #00e5ff)"/>
+  <polygon points="250,270 276,315 224,315" stroke="#ffffff" stroke-width="2" fill="none"/>
+  <circle cx="250" cy="300" r="14" fill="#ffffff" filter="drop-shadow(0 0 10px #ffffff)"/>
+
+  <!-- Telemetry Coordinate Markers -->
+  <line x1="70" y1="300" x2="110" y2="300" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+  <line x1="390" y1="300" x2="430" y2="300" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+  <text x="250" y="540" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="#00e5ff" text-anchor="middle" opacity="0.85">STARK MARK-LXXXV // NANOTECH ACTIVE</text>
+</svg>

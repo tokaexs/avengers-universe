@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <radialGradient id="kangGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ffaa" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#0066cc" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#020306" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="300" cy="300" r="260" fill="url(#kangGlow)"/>
+
+  <!-- Temporal Concentric Ring Portals -->
+  <circle cx="300" cy="300" r="230" stroke="#00ffaa" stroke-width="2" stroke-dasharray="20 10" opacity="0.75"/>
+  <circle cx="300" cy="300" r="180" stroke="#00d4ff" stroke-width="2.5" stroke-dasharray="10 6" opacity="0.85"/>
+  <circle cx="300" cy="300" r="130" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
+
+  <!-- Iconic Kang Chrono Helmet & Blue Facial Visor -->
+  <path d="M220 160 L380 160 L390 280 L350 420 L300 450 L250 420 L210 280 Z" stroke="#00ffaa" stroke-width="3.5" fill="#04121a" filter="drop-shadow(0 0 25px #00ffaa)"/>
+  
+  <!-- Glowing Cyan Facial Visor Lines -->
+  <line x1="260" y1="230" x2="260" y2="390" stroke="#00e5ff" stroke-width="3" filter="drop-shadow(0 0 10px #00e5ff)"/>
+  <line x1="340" y1="230" x2="340" y2="390" stroke="#00e5ff" stroke-width="3" filter="drop-shadow(0 0 10px #00e5ff)"/>
+  <ellipse cx="300" cy="270" rx="35" ry="15" stroke="#ffffff" stroke-width="2" fill="none"/>
+
+  <!-- Multiverse Timeline Branching Vectors -->
+  <path d="M100 200 L220 300 L100 400" stroke="#00ffaa" stroke-width="1.5" opacity="0.6"/>
+  <path d="M500 200 L380 300 L500 400" stroke="#00ffaa" stroke-width="1.5" opacity="0.6"/>
+  
+  <text x="300" y="530" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="5" fill="#00ffaa" text-anchor="middle" opacity="0.9">MULTIVERSAL CONQUEST // 31ST CENTURY TIME LORD</text>
+</svg>

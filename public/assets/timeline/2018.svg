@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="tGlow2018" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd000" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#ff6600" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#020408" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="#03060c"/>
+  <circle cx="300" cy="200" r="180" fill="url(#tGlow2018)"/>
+
+  <!-- Infinity Gauntlet Backplate -->
+  <path d="M220 330 L220 180 L260 140 L300 130 L340 140 L380 180 L380 330 Z" stroke="#ffd000" stroke-width="2.5" fill="#181204"/>
+
+  <!-- 6 Infinity Stones Glowing in Correct Colors -->
+  <!-- Mind Stone (Center) -->
+  <polygon points="300,180 315,200 300,225 285,200" fill="#ffd000" filter="drop-shadow(0 0 10px #ffd000)"/>
+  <!-- Space Stone (Index) -->
+  <circle cx="260" cy="160" r="10" fill="#00e5ff" filter="drop-shadow(0 0 8px #00e5ff)"/>
+  <!-- Reality Stone (Middle) -->
+  <circle cx="290" cy="148" r="10" fill="#ff2233" filter="drop-shadow(0 0 8px #ff2233)"/>
+  <!-- Power Stone (Ring) -->
+  <circle cx="320" cy="150" r="10" fill="#b366ff" filter="drop-shadow(0 0 8px #b366ff)"/>
+  <!-- Time Stone (Pinky) -->
+  <circle cx="350" cy="168" r="9" fill="#00ff66" filter="drop-shadow(0 0 8px #00ff66)"/>
+  <!-- Soul Stone (Thumb) -->
+  <circle cx="230" cy="210" r="10" fill="#ff8800" filter="drop-shadow(0 0 8px #ff8800)"/>
+
+  <!-- Cosmic Snapping Energy Waves -->
+  <circle cx="300" cy="200" r="150" stroke="#ffd000" stroke-width="1" stroke-dasharray="14 8" opacity="0.6"/>
+  <text x="300" y="370" font-family="'Rajdhani', sans-serif" font-size="11" font-weight="700" letter-spacing="4" fill="#ffd000" text-anchor="middle" opacity="0.9">COSMIC DECIMATION // 6 INFINITY STONES 2018</text>
+</svg>

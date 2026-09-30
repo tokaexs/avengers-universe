@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" fill="none">
+  <defs>
+    <radialGradient id="hulkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#00ff66" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="250" cy="300" r="220" fill="url(#hulkGlow)"/>
+
+  <!-- Gamma Biohazard & Kinetic Fist Geometry -->
+  <circle cx="250" cy="300" r="190" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="10 8" opacity="0.5"/>
+  <circle cx="250" cy="300" r="130" stroke="#00ff66" stroke-width="2" opacity="0.7"/>
+
+  <!-- Radiation Trefoil Blades -->
+  <path d="M250 170 C280 170 310 200 310 230 C310 260 280 270 250 270 C220 270 190 260 190 230 C190 200 220 170 250 170 Z" stroke="#00ff66" stroke-width="3" fill="rgba(0, 255, 102, 0.08)"/>
+  <path d="M160 330 C145 310 145 270 175 250 C200 235 225 250 240 275 C225 300 200 345 160 330 Z" stroke="#00ff66" stroke-width="3" fill="rgba(0, 255, 102, 0.08)"/>
+  <path d="M340 330 C355 310 355 270 325 250 C300 235 275 250 260 275 C275 300 300 345 340 330 Z" stroke="#00ff66" stroke-width="3" fill="rgba(0, 255, 102, 0.08)"/>
+
+  <!-- Bio-Resonance Center Node -->
+  <circle cx="250" cy="300" r="28" fill="#041208" stroke="#ffffff" stroke-width="3" filter="drop-shadow(0 0 12px #00ff66)"/>
+  <circle cx="250" cy="300" r="12" fill="#00ff66" filter="drop-shadow(0 0 8px #00ff66)"/>
+
+  <!-- Seismic Pulse Waveforms -->
+  <path d="M80 440 L160 440 L180 410 L200 470 L220 390 L250 490 L280 390 L300 470 L320 410 L340 440 L420 440" stroke="#00ff66" stroke-width="2" opacity="0.85" filter="drop-shadow(0 0 6px #00ff66)"/>
+
+  <text x="250" y="555" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="#00ff66" text-anchor="middle" opacity="0.85">GAMMA BURST // UNLIMITED KINETIC YIELD</text>
+</svg>

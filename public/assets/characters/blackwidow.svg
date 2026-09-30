@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600" fill="none">
+  <defs>
+    <radialGradient id="widowGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff3344" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#ff3344" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="250" cy="300" r="220" fill="url(#widowGlow)"/>
+  <circle cx="250" cy="300" r="190" stroke="#ff3344" stroke-width="1" stroke-dasharray="12 6" opacity="0.5"/>
+
+  <!-- Iconic Red Hourglass Emblem -->
+  <polygon points="170,160 330,160 250,290" fill="#ff3344" opacity="0.9" filter="drop-shadow(0 0 16px #ff3344)"/>
+  <polygon points="170,440 330,440 250,310" fill="#ff3344" opacity="0.9" filter="drop-shadow(0 0 16px #ff3344)"/>
+
+  <!-- Outer Tactile Stealth Spider Web Array -->
+  <polygon points="250,110 380,210 380,390 250,490 120,390 120,210" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="250,150 340,225 340,375 250,450 160,375 160,225" stroke="#ff3344" stroke-width="2" opacity="0.75"/>
+
+  <!-- Electroshock Widow's Bite Pulse Nodes -->
+  <circle cx="120" cy="300" r="8" fill="#ffffff" filter="drop-shadow(0 0 8px #ff3344)"/>
+  <circle cx="380" cy="300" r="8" fill="#ffffff" filter="drop-shadow(0 0 8px #ff3344)"/>
+  <line x1="80" y1="300" x2="420" y2="300" stroke="#ff3344" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+
+  <text x="250" y="555" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="4" fill="#ff3344" text-anchor="middle" opacity="0.85">WIDOW'S BITE 300KV // BLACK OPS STEALTH</text>
+</svg>

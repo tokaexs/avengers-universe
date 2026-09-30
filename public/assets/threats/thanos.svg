@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <radialGradient id="thanosGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd000" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#9933ff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#020306" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="300" cy="300" r="260" fill="url(#thanosGlow)"/>
+
+  <!-- Cosmic Celestial Circles -->
+  <circle cx="300" cy="300" r="230" stroke="#ffd000" stroke-width="1.5" stroke-dasharray="14 8" opacity="0.6"/>
+  <circle cx="300" cy="300" r="180" stroke="#9933ff" stroke-width="2" opacity="0.8"/>
+
+  <!-- Golden Gauntlet Armored Silhouette -->
+  <path d="M220 480 L220 280 L260 210 L300 190 L340 210 L380 280 L380 480 Z" stroke="#ffd000" stroke-width="3.5" fill="#181004" filter="drop-shadow(0 0 25px #ffd000)"/>
+
+  <!-- 6 Glowing Infinity Stones -->
+  <!-- Mind Stone (Yellow - Back of Hand) -->
+  <polygon points="300,270 320,295 300,325 280,295" fill="#ffd000" filter="drop-shadow(0 0 16px #ffd000)"/>
+  <!-- Space Stone (Cyan - Index Finger) -->
+  <circle cx="250" cy="240" r="14" fill="#00e5ff" filter="drop-shadow(0 0 12px #00e5ff)"/>
+  <!-- Reality Stone (Red - Middle Finger) -->
+  <circle cx="285" cy="220" r="14" fill="#ff2233" filter="drop-shadow(0 0 12px #ff2233)"/>
+  <!-- Power Stone (Purple - Ring Finger) -->
+  <circle cx="320" cy="225" r="14" fill="#b366ff" filter="drop-shadow(0 0 12px #b366ff)"/>
+  <!-- Time Stone (Green - Little Finger) -->
+  <circle cx="355" cy="245" r="13" fill="#00ff66" filter="drop-shadow(0 0 12px #00ff66)"/>
+  <!-- Soul Stone (Orange - Thumb) -->
+  <circle cx="215" cy="310" r="14" fill="#ff8800" filter="drop-shadow(0 0 12px #ff8800)"/>
+
+  <!-- Cosmic Energy Snapping Rays -->
+  <line x1="300" y1="90" x2="300" y2="150" stroke="#ffd000" stroke-width="2" opacity="0.8"/>
+  <line x1="120" y1="300" x2="180" y2="300" stroke="#ffd000" stroke-width="2" opacity="0.8"/>
+  <line x1="420" y1="300" x2="480" y2="300" stroke="#ffd000" stroke-width="2" opacity="0.8"/>
+  
+  <text x="300" y="530" font-family="'Rajdhani', sans-serif" font-size="12" font-weight="700" letter-spacing="5" fill="#ffd000" text-anchor="middle" opacity="0.9">UNIVERSAL DECIMATION // 6 INFINITY STONES</text>
+</svg>

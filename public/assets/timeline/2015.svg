@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" fill="none">
+  <defs>
+    <radialGradient id="tGlow2015" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff3344" stop-opacity="0.7"/>
+      <stop offset="60%" stop-color="#ff3344" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#020408" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="#03060c"/>
+  <circle cx="300" cy="200" r="180" fill="url(#tGlow2015)"/>
+  
+  <!-- Ultron Robotic Face / Neural Matrix -->
+  <polygon points="300,120 370,170 380,260 340,310 300,330 260,310 220,260 230,170" stroke="#ff3344" stroke-width="2.5" fill="#140608" filter="drop-shadow(0 0 15px #ff3344)"/>
+  
+  <!-- Glowing Crimson Slits -->
+  <polygon points="250,210 280,215 275,225 252,222" fill="#ff3344" filter="drop-shadow(0 0 8px #ff3344)"/>
+  <polygon points="350,210 320,215 325,225 348,222" fill="#ff3344" filter="drop-shadow(0 0 8px #ff3344)"/>
+  <path d="M260,260 C280,280 320,280 340,260" stroke="#ff3344" stroke-width="3" fill="none"/>
+
+  <!-- Sokovia Thrusters Ring -->
+  <circle cx="300" cy="200" r="140" stroke="#ff3344" stroke-width="1" stroke-dasharray="10 8" opacity="0.4"/>
+  <text x="300" y="370" font-family="'Rajdhani', sans-serif" font-size="11" font-weight="700" letter-spacing="4" fill="#ff3344" text-anchor="middle" opacity="0.9">SYNTHETIC THREAT MATRIX // SOKOVIA 2015</text>
+</svg>
