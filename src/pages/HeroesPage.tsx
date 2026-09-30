@@ -23,6 +23,15 @@ export default function HeroesPage({
         }}
       />
 
+      {/* Subtle Classified Insignia Watermark */}
+      <div className="heroes-emblem-watermark" aria-hidden="true">
+        <img
+          src="/assets/avengers-emblem.png"
+          alt=""
+          className="watermark-emblem-img"
+        />
+      </div>
+
       {/* Header HUD */}
       <div className="gateway-header-bar">
         <div className="gateway-tag">
