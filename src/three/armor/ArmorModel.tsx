@@ -1,7 +1,14 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import type { IronManSuit } from '../../data/ironManSuits';
+
+// Preload authentic 3D armor models
+useGLTF.preload('/models/ironman/iron_man.glb');
+useGLTF.preload('/models/ironman/iron_man_mark7.glb');
+useGLTF.preload('/models/ironman/iron_man_rig.glb');
+useGLTF.preload('/models/ironman/nano_tech.glb');
 
 interface ArmorModelProps {
   suit: IronManSuit;
@@ -10,7 +17,101 @@ interface ArmorModelProps {
   assemblyProgress?: number; // 0 (fully separated) to 1 (fully locked)
 }
 
-export default function ArmorModel({
+function GLBArmorMesh({
+  modelPath,
+  isInspecting,
+  isHulkbuster,
+}: {
+  modelPath: string;
+  isInspecting?: boolean;
+  isHulkbuster?: boolean;
+}) {
+  const { scene } = useGLTF(modelPath);
+  const modelRef = useRef<THREE.Group>(null);
+
+  const { clonedScene, normalizedScale } = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.updateMatrixWorld(true);
+
+    const box = new THREE.Box3();
+    clone.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        const name = (mesh.name || '').toLowerCase();
+        
+        // Hide extraneous ground meshes, backdrop spheres, and pedestal planes
+        if (
+          name.includes('concrete') ||
+          name.includes('plane') ||
+          name.includes('floor') ||
+          name.includes('ground') ||
+          name.includes('sphere')
+        ) {
+          mesh.visible = false;
+          return;
+        }
+
+        mesh.visible = true;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        if (mesh.material) {
+          if (Array.isArray(mesh.material)) {
+            mesh.material.forEach((mat) => {
+              mat.side = THREE.FrontSide;
+              mat.needsUpdate = true;
+            });
+          } else {
+            mesh.material.side = THREE.FrontSide;
+            mesh.material.needsUpdate = true;
+          }
+        }
+
+        if (mesh.geometry) {
+          mesh.geometry.computeBoundingBox();
+          const b = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
+          box.union(b);
+        }
+      }
+    });
+
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    // Standardize suit height to 2.45 units (2.85 for Hulkbuster)
+    const suitHeight = (size.y > 0.1 ? size.y : Math.max(size.y, size.z)) || 2.0;
+    const targetHeight = isHulkbuster ? 2.85 : 2.45;
+    const scale = targetHeight / suitHeight;
+
+    // Center the model cleanly around origin
+    clone.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+
+    return { clonedScene: clone, normalizedScale: scale };
+  }, [scene, isHulkbuster]);
+
+  useFrame((state) => {
+    if (!modelRef.current) return;
+    const t = state.clock.getElapsedTime();
+    const ptrX = state.pointer.x * 0.25;
+    const ptrY = state.pointer.y * 0.15;
+
+    if (!isInspecting) {
+      modelRef.current.position.y = Math.sin(t * 1.5) * 0.035;
+      modelRef.current.rotation.y = Math.sin(t * 0.4) * 0.08 + ptrX;
+      modelRef.current.rotation.x = -ptrY * 0.5;
+    }
+  });
+
+  return (
+    <group ref={modelRef} position={[0, 0, 0]}>
+      <primitive object={clonedScene} scale={[normalizedScale, normalizedScale, normalizedScale]} />
+    </group>
+  );
+}
+
+function ProceduralArmorMesh({
   suit,
   isInspecting,
   isAssembling,
@@ -39,7 +140,7 @@ export default function ArmorModel({
 
   const isHulkbuster = !!suit.isHulkbuster;
   const isNanotech = !!suit.isNanotech;
-  const scale = isHulkbuster ? 1.65 : 1.0;
+  const scale = isHulkbuster ? 1.75 : 1.1;
 
   // Materials
   const materials = useMemo(() => {
@@ -134,25 +235,17 @@ export default function ArmorModel({
 
   return (
     <group ref={rootGroupRef} scale={[scale, scale, scale]} position={[0, -0.15, 0]}>
-      
       {/* 01 // HELMET & OPTICS */}
       <group ref={helmetRef} position={[0, 0.95, 0]}>
-        {/* Main Dome */}
         <mesh material={materials.matPrimary} castShadow>
           <sphereGeometry args={[0.26, 24, 24]} />
         </mesh>
-        
-        {/* Golden Faceplate */}
         <mesh position={[0, 0.02, 0.12]} material={materials.matSecondary} castShadow>
           <boxGeometry args={[0.22, 0.26, 0.18]} />
         </mesh>
-
-        {/* Jaw & Chin Plate */}
         <mesh position={[0, -0.14, 0.11]} material={materials.matPrimary}>
           <boxGeometry args={[0.18, 0.12, 0.16]} />
         </mesh>
-
-        {/* Glowing Eye Slits */}
         <group ref={eyesRef} position={[0, 0.05, 0.21]}>
           <mesh position={[-0.055, 0, 0]} material={materials.matEyes}>
             <boxGeometry args={[0.045, 0.012, 0.02]} />
@@ -170,17 +263,12 @@ export default function ArmorModel({
 
       {/* 03 // CHEST & TORSO & ARC REACTOR */}
       <group ref={chestRef} position={[0, 0.35, 0]}>
-        {/* Upper Pectoral Plate */}
         <mesh material={materials.matPrimary} castShadow>
           <boxGeometry args={[isHulkbuster ? 0.95 : 0.68, 0.42, 0.42]} />
         </mesh>
-
-        {/* Golden Chest Trim Accents */}
         <mesh position={[0, 0.06, 0.18]} material={materials.matSecondary}>
           <boxGeometry args={[isHulkbuster ? 0.7 : 0.46, 0.22, 0.12]} />
         </mesh>
-
-        {/* ARC REACTOR CORE */}
         <group position={[0, 0.04, 0.23]}>
           {arcShape === 'triangle' ? (
             <mesh ref={reactorRef} rotation={[0, 0, Math.PI]} material={materials.matArc}>
@@ -195,14 +283,10 @@ export default function ArmorModel({
               <cylinderGeometry args={[isHulkbuster ? 0.14 : 0.085, isHulkbuster ? 0.14 : 0.085, 0.04, 24]} />
             </mesh>
           )}
-
-          {/* Concentric Reactor Ring */}
           <mesh rotation={[Math.PI / 2, 0, 0]} material={materials.matTrim}>
             <torusGeometry args={[isHulkbuster ? 0.17 : 0.11, 0.016, 12, 24]} />
           </mesh>
         </group>
-
-        {/* Back Thrusters / Flaps */}
         <group position={[0, 0.08, -0.22]}>
           <mesh position={[-0.14, 0, 0]} material={materials.matTrim}>
             <boxGeometry args={[0.09, 0.2, 0.08]} />
@@ -210,8 +294,6 @@ export default function ArmorModel({
           <mesh position={[0.14, 0, 0]} material={materials.matTrim}>
             <boxGeometry args={[0.09, 0.2, 0.08]} />
           </mesh>
-          
-          {/* Mark 85 Lightning Refocuser / Mark 50 Nano Wings */}
           {isNanotech && (
             <group position={[0, 0.1, -0.1]}>
               <mesh position={[-0.3, 0.2, 0]} rotation={[0, 0, 0.5]} material={materials.matSecondary}>
@@ -223,8 +305,6 @@ export default function ArmorModel({
             </group>
           )}
         </group>
-
-        {/* Abdominal Segment Plates */}
         <group position={[0, -0.32, 0]}>
           <mesh position={[0, 0.08, 0.04]} material={materials.matSecondary}>
             <boxGeometry args={[0.42, 0.1, 0.32]} />
@@ -240,23 +320,18 @@ export default function ArmorModel({
 
       {/* 04 // LEFT ARM */}
       <group ref={leftArmRef} position={[-0.52, 0.45, 0]}>
-        {/* Shoulder Pauldron */}
         <mesh material={materials.matPrimary} castShadow>
           <sphereGeometry args={[isHulkbuster ? 0.38 : 0.22, 16, 16]} />
         </mesh>
-        {/* Upper Bicep */}
         <mesh position={[0, -0.22, 0]} material={materials.matSecondary}>
           <cylinderGeometry args={[0.1, 0.09, 0.24, 16]} />
         </mesh>
-        {/* Elbow Joint */}
         <mesh position={[0, -0.38, 0]} material={materials.matDarkJoints}>
           <sphereGeometry args={[0.09, 12, 12]} />
         </mesh>
-        {/* Forearm & Gauntlet */}
         <mesh position={[0, -0.56, 0]} material={materials.matPrimary} castShadow>
           <cylinderGeometry args={[0.11, 0.08, 0.28, 16]} />
         </mesh>
-        {/* Palm Repulsor */}
         <mesh position={[0, -0.74, 0.02]} rotation={[Math.PI / 2, 0, 0]} material={materials.matArc}>
           <cylinderGeometry args={[0.035, 0.035, 0.02, 16]} />
         </mesh>
@@ -264,23 +339,18 @@ export default function ArmorModel({
 
       {/* 05 // RIGHT ARM */}
       <group ref={rightArmRef} position={[0.52, 0.45, 0]}>
-        {/* Shoulder Pauldron */}
         <mesh material={materials.matPrimary} castShadow>
           <sphereGeometry args={[isHulkbuster ? 0.38 : 0.22, 16, 16]} />
         </mesh>
-        {/* Upper Bicep */}
         <mesh position={[0, -0.22, 0]} material={materials.matSecondary}>
           <cylinderGeometry args={[0.1, 0.09, 0.24, 16]} />
         </mesh>
-        {/* Elbow Joint */}
         <mesh position={[0, -0.38, 0]} material={materials.matDarkJoints}>
           <sphereGeometry args={[0.09, 12, 12]} />
         </mesh>
-        {/* Forearm & Gauntlet */}
         <mesh position={[0, -0.56, 0]} material={materials.matPrimary} castShadow>
           <cylinderGeometry args={[0.11, 0.08, 0.28, 16]} />
         </mesh>
-        {/* Palm Repulsor */}
         <mesh position={[0, -0.74, 0.02]} rotation={[Math.PI / 2, 0, 0]} material={materials.matArc}>
           <cylinderGeometry args={[0.035, 0.035, 0.02, 16]} />
         </mesh>
@@ -293,23 +363,18 @@ export default function ArmorModel({
 
       {/* 07 // LEFT LEG */}
       <group ref={leftLegRef} position={[-0.22, -0.45, 0]}>
-        {/* Thigh */}
         <mesh position={[0, -0.18, 0]} material={materials.matSecondary} castShadow>
           <cylinderGeometry args={[0.13, 0.11, 0.36, 16]} />
         </mesh>
-        {/* Knee Guard */}
         <mesh position={[0, -0.38, 0.06]} material={materials.matTrim}>
           <boxGeometry args={[0.12, 0.12, 0.08]} />
         </mesh>
-        {/* Shin Armor */}
         <mesh position={[0, -0.62, 0]} material={materials.matPrimary} castShadow>
           <cylinderGeometry args={[0.12, 0.09, 0.38, 16]} />
         </mesh>
-        {/* Boot */}
         <mesh position={[0, -0.85, 0.05]} material={materials.matPrimary}>
           <boxGeometry args={[0.14, 0.1, 0.24]} />
         </mesh>
-        {/* Boot Sole Thruster */}
         <mesh position={[0, -0.91, 0]} rotation={[Math.PI / 2, 0, 0]} material={materials.matArc}>
           <cylinderGeometry args={[0.04, 0.04, 0.02, 16]} />
         </mesh>
@@ -317,28 +382,49 @@ export default function ArmorModel({
 
       {/* 08 // RIGHT LEG */}
       <group ref={rightLegRef} position={[0.22, -0.45, 0]}>
-        {/* Thigh */}
         <mesh position={[0, -0.18, 0]} material={materials.matSecondary} castShadow>
           <cylinderGeometry args={[0.13, 0.11, 0.36, 16]} />
         </mesh>
-        {/* Knee Guard */}
         <mesh position={[0, -0.38, 0.06]} material={materials.matTrim}>
           <boxGeometry args={[0.12, 0.12, 0.08]} />
         </mesh>
-        {/* Shin Armor */}
         <mesh position={[0, -0.62, 0]} material={materials.matPrimary} castShadow>
           <cylinderGeometry args={[0.12, 0.09, 0.38, 16]} />
         </mesh>
-        {/* Boot */}
         <mesh position={[0, -0.85, 0.05]} material={materials.matPrimary}>
           <boxGeometry args={[0.14, 0.1, 0.24]} />
         </mesh>
-        {/* Boot Sole Thruster */}
         <mesh position={[0, -0.91, 0]} rotation={[Math.PI / 2, 0, 0]} material={materials.matArc}>
           <cylinderGeometry args={[0.04, 0.04, 0.02, 16]} />
         </mesh>
       </group>
-
     </group>
   );
+}
+
+export default function ArmorModel(props: ArmorModelProps) {
+  const { suit, isAssembling } = props;
+
+  // Hulkbuster has its custom oversized armor chassis
+  if (suit.isHulkbuster) {
+    return <ProceduralArmorMesh {...props} />;
+  }
+
+  // Use dedicated model if specified (e.g. Mark III, Mark VII, Mark L, Mark LXXXV),
+  // otherwise standardize to authentic iron_man.glb for all other suits
+  const modelToUse = suit.modelPath || '/models/ironman/iron_man.glb';
+
+  if (!isAssembling) {
+    return (
+      <Suspense fallback={<ProceduralArmorMesh {...props} />}>
+        <GLBArmorMesh
+          modelPath={modelToUse}
+          isInspecting={props.isInspecting}
+          isHulkbuster={false}
+        />
+      </Suspense>
+    );
+  }
+
+  return <ProceduralArmorMesh {...props} />;
 }

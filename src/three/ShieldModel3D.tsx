@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useGLTF, Center } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface ShieldModel3DProps {
@@ -7,10 +8,57 @@ interface ShieldModel3DProps {
   selectedHotspot?: string | null;
 }
 
-export default function ShieldModel3D({
-  isSpinning = false,
-  selectedHotspot = null,
-}: ShieldModel3DProps) {
+function RealShieldGLB({ isSpinning = false }: { isSpinning?: boolean }) {
+  const { scene } = useGLTF('/models/captain-america/shield.glb');
+  const groupRef = useRef<THREE.Group>(null);
+
+  const { clonedScene, normalizedScale } = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const targetSize = 2.2;
+    const scale = targetSize / maxDim;
+
+    clone.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+
+    return { clonedScene: clone, normalizedScale: scale };
+  }, [scene]);
+
+  useFrame((state, delta) => {
+    const t = state.clock.getElapsedTime();
+
+    if (groupRef.current) {
+      if (isSpinning) {
+        groupRef.current.rotation.z += delta * 12;
+        groupRef.current.rotation.y = Math.sin(t * 2) * 0.4;
+      } else {
+        groupRef.current.rotation.z += delta * 0.35;
+        groupRef.current.rotation.y = Math.sin(t * 0.7) * 0.3;
+        groupRef.current.rotation.x = Math.cos(t * 0.5) * 0.15;
+      }
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, 0]}>
+      <Center>
+        <primitive object={clonedScene} scale={[normalizedScale, normalizedScale, normalizedScale]} />
+      </Center>
+      <pointLight position={[0, 0, 2]} color="#00e5ff" intensity={4} distance={6} />
+      <pointLight position={[0, 0, -2]} color="#ff3344" intensity={2} distance={4} />
+    </group>
+  );
+}
+
+function ProceduralShield({ isSpinning = false, selectedHotspot = null }: ShieldModel3DProps) {
   const shieldRef = useRef<THREE.Group>(null);
   const ringGlowRef = useRef<THREE.Mesh>(null);
   const starGlowRef = useRef<THREE.Mesh>(null);
@@ -145,3 +193,14 @@ export default function ShieldModel3D({
     </group>
   );
 }
+
+export default function ShieldModel3D(props: ShieldModel3DProps) {
+  try {
+    return <RealShieldGLB isSpinning={props.isSpinning} />;
+  } catch {
+    return <ProceduralShield {...props} />;
+  }
+}
+
+// Preload GLB
+useGLTF.preload('/models/captain-america/shield.glb');

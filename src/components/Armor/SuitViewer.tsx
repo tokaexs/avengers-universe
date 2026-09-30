@@ -43,7 +43,7 @@ function DynamicArmorCamera({ isInspecting, isHulkbuster, selectedHotspot }: Cam
 function ArmoryPedestal({ accentColor, isHulkbuster }: { accentColor: string; isHulkbuster: boolean }) {
   const radius = isHulkbuster ? 2.2 : 1.4;
   return (
-    <group position={[0, -1.5, 0]}>
+    <group position={[0, -1.18, 0]}>
       {/* Outer Ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[radius - 0.05, radius, 48]} />

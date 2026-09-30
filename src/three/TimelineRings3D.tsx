@@ -1,9 +1,61 @@
-import { useRef } from 'react';
+import { useRef, useMemo, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useGLTF, Center } from '@react-three/drei';
 import * as THREE from 'three';
+
+useGLTF.preload('/models/titles/avengers_endgame.glb');
 
 interface TimelineRings3DProps {
   activeEraIdx?: number;
+}
+
+function EndgameTitleGLB() {
+  const { scene } = useGLTF('/models/titles/avengers_endgame.glb');
+  const titleRef = useRef<THREE.Group>(null);
+
+  const { clonedScene, normalizedScale } = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const targetSize = 1.5;
+    const scale = targetSize / maxDim;
+
+    clone.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+
+    return { clonedScene: clone, normalizedScale: scale };
+  }, [scene]);
+
+  useFrame((state) => {
+    if (titleRef.current) {
+      const t = state.clock.getElapsedTime();
+      titleRef.current.rotation.y = Math.sin(t * 0.5) * 0.15;
+    }
+  });
+
+  return (
+    <group ref={titleRef} position={[0, 0, 0]}>
+      <Center>
+        <primitive object={clonedScene} scale={[normalizedScale, normalizedScale, normalizedScale]} />
+      </Center>
+    </group>
+  );
+}
+
+function ProceduralSingularityCore() {
+  return (
+    <mesh scale={[0.3, 0.3, 0.3]}>
+      <octahedronGeometry args={[1, 0]} />
+      <meshBasicMaterial color="#ffffff" />
+    </mesh>
+  );
 }
 
 export default function TimelineRings3D({ activeEraIdx = 0 }: TimelineRings3DProps) {
@@ -86,11 +138,14 @@ export default function TimelineRings3D({ activeEraIdx = 0 }: TimelineRings3DPro
         <meshBasicMaterial color={currentColor} transparent opacity={0.5} />
       </mesh>
 
-      {/* Core Singularity Point */}
-      <mesh scale={[0.3, 0.3, 0.3]}>
-        <octahedronGeometry args={[1, 0]} />
-        <meshBasicMaterial color="#ffffff" />
-      </mesh>
+      {/* Core Quantum Singularity Point / Authentic Endgame 3D Emblem for Timeline */}
+      {activeEraIdx === 4 ? (
+        <Suspense fallback={<ProceduralSingularityCore />}>
+          <EndgameTitleGLB />
+        </Suspense>
+      ) : (
+        <ProceduralSingularityCore />
+      )}
 
       <pointLight position={[0, 0, 0]} color={currentColor} intensity={5} distance={8} />
     </group>

@@ -173,6 +173,7 @@ export const IRON_MAN_SUITS_DATA: IronManSuit[] = [
       mobility: 85,
       weapons: 84,
     },
+    modelPath: '/models/ironman/iron_man_rig.glb',
     technicalDetails: [
       { label: 'TOP SPEED', value: 'MACH 2.2' },
       { label: 'PRESSURE CEILING', value: '85,000 FT (SUB-ORBITAL)' },
@@ -353,6 +354,7 @@ export const IRON_MAN_SUITS_DATA: IronManSuit[] = [
       mobility: 88,
       weapons: 95,
     },
+    modelPath: '/models/ironman/iron_man_mark7.glb',
     technicalDetails: [
       { label: 'ORDNANCE COUNT', value: '48 INDEPENDENT ROCKETS' },
       { label: 'DEPLOYMENT', value: 'AIRBORNE RAPID POD CATCH' },
@@ -670,6 +672,7 @@ export const IRON_MAN_SUITS_DATA: IronManSuit[] = [
       mobility: 100,
       weapons: 100,
     },
+    modelPath: '/models/ironman/nano_tech.glb',
     technicalDetails: [
       { label: 'PARTICLE COUNT', value: '8.4 BILLION NANOBOTS' },
       { label: 'MORPH SPEED', value: '0.18 SECONDS' },
@@ -716,6 +719,7 @@ export const IRON_MAN_SUITS_DATA: IronManSuit[] = [
       mobility: 99,
       weapons: 100,
     },
+    modelPath: '/models/ironman/iron_man.glb',
     technicalDetails: [
       { label: 'INFINITY READY', value: '6-STONE GAMMA SHUNT' },
       { label: 'LIGHTNING REFOCUS', value: 'THOR THUNDER CONVERTER' },

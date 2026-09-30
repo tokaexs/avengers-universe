@@ -1,6 +1,8 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Canvas } from '@react-three/fiber';
+import AvengersLogo3D from '../three/AvengersLogo3D';
 import Button from '../components/Button';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -247,23 +249,14 @@ export default function Assemble({
         <div className="reactor-ring-outer" />
       </div>
 
-      {/* Avengers "A" Silhouette Insignia */}
+      {/* Avengers 3D Title Emblem */}
       <div ref={emblemRef} className="assemble-emblem-wrapper" aria-hidden="true">
-        <svg viewBox="0 0 100 100" className="assemble-emblem-svg">
-          <circle cx="50" cy="50" r="46" className="emblem-circle" />
-          <path
-            d="M50 14L74 80H61L50 48L39 80H26L50 14Z"
-            className="emblem-a"
-          />
-          <path
-            d="M30 58H70"
-            className="emblem-crossbar"
-          />
-          <path
-            d="M62 48L78 58L62 68"
-            className="emblem-arrow"
-          />
-        </svg>
+        <Canvas camera={{ position: [0, 0, 3.8], fov: 40 }} gl={{ antialias: true, alpha: true }}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[3, 5, 4]} color="#ffffff" intensity={2.0} />
+          <directionalLight position={[-3, -3, -2]} color="#00e5ff" intensity={1.5} />
+          <AvengersLogo3D />
+        </Canvas>
       </div>
 
       {/* Cinematic Trailer Typography Content */}

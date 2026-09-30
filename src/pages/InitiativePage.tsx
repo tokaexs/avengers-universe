@@ -2,7 +2,7 @@ import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { INITIATIVE_PROTOCOLS, TIMELINE_LOGS, type InitiativeProtocol } from '../data/initiativeData';
-import ArcReactor from '../three/ArcReactor';
+import AvengersLogo3D from '../three/AvengersLogo3D';
 import Particles from '../three/Particles';
 import Button from '../components/Button';
 
@@ -85,14 +85,14 @@ export default function InitiativePage({
           </div>
         </div>
 
-        {/* Center: 3D Command Energy Core */}
+        {/* Center: 3D Command Energy Core & Avengers 3D Title */}
         <div className="initiative-center-3d">
           <Canvas camera={{ position: [0, 0, 4.4], fov: 42 }}>
             <Suspense fallback={null}>
               <ambientLight intensity={0.4} />
               <directionalLight position={[4, 5, 4]} color="#00e5ff" intensity={2.0} />
               <directionalLight position={[-4, -3, -2]} color="#4d88ff" intensity={1.5} />
-              <ArcReactor />
+              <AvengersLogo3D />
               <Particles />
               <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 1.7} minPolarAngle={Math.PI / 2.5} />
             </Suspense>
