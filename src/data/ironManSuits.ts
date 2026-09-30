@@ -83,6 +83,7 @@ export const IRON_MAN_SUITS_DATA: IronManSuit[] = [
       mobility: 30,
       weapons: 60,
     },
+    modelPath: '/models/ironman/iron_man_mark1.glb',
     technicalDetails: [
       { label: 'DRY WEIGHT', value: '1,500 LBS' },
       { label: 'TENSILE STRENGTH', value: '450 MPa' },
@@ -430,6 +431,7 @@ export const IRON_MAN_SUITS_DATA: IronManSuit[] = [
     mobility: 'Massive Heavy Shockwave Slam & Seismic Kinetic Impact',
     status: 'ACTIVE',
     isHulkbuster: true,
+    modelPath: '/models/ironman/hulkbuster.glb',
     colorPalette: {
       primary: '#7f1d1d',
       secondary: '#eab308',

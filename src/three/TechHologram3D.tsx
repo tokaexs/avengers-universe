@@ -1,13 +1,15 @@
-import { useRef } from 'react';
+import { useRef, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import TechnologyArcReactor3D from './TechnologyArcReactor3D';
+import ShieldModel3D from './ShieldModel3D';
 
 interface TechHologram3DProps {
   techId?: string;
   isOverclocked?: boolean;
 }
 
-export default function TechHologram3D({
+function ProceduralTechHologram({
   techId = 'arc-reactor',
   isOverclocked = false,
 }: TechHologram3DProps) {
@@ -57,7 +59,6 @@ export default function TechHologram3D({
 
   return (
     <group ref={groupRef} scale={1.3}>
-      {/* Central Hologram Wireframe Node */}
       <mesh ref={coreRef}>
         <icosahedronGeometry args={[0.8, 1]} />
         <meshStandardMaterial
@@ -69,25 +70,21 @@ export default function TechHologram3D({
         />
       </mesh>
 
-      {/* Inner Glowing Plasma Nucleus */}
       <mesh scale={[0.4, 0.4, 0.4]}>
         <sphereGeometry args={[0.8, 24, 24]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
       </mesh>
 
-      {/* Diagnostic Orbital Ring 1 */}
       <mesh ref={ring1Ref}>
         <torusGeometry args={[1.35, 0.025, 16, 64]} />
         <meshBasicMaterial color={techColor} transparent opacity={0.7} />
       </mesh>
 
-      {/* Diagnostic Orbital Ring 2 */}
       <mesh ref={ring2Ref}>
         <torusGeometry args={[1.65, 0.02, 16, 64]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.4} />
       </mesh>
 
-      {/* Outer Hex Cage */}
       <mesh>
         <cylinderGeometry args={[1.8, 1.8, 0.08, 6]} />
         <meshStandardMaterial color="#2d3748" wireframe metalness={0.9} />
@@ -96,4 +93,31 @@ export default function TechHologram3D({
       <pointLight position={[0, 0, 0]} color={techColor} intensity={5} distance={8} />
     </group>
   );
+}
+
+export default function TechHologram3D({
+  techId = 'arc-reactor',
+  isOverclocked = false,
+}: TechHologram3DProps) {
+  if (techId === 'arc-reactor') {
+    return (
+      <group scale={1.15}>
+        <Suspense fallback={<ProceduralTechHologram techId={techId} isOverclocked={isOverclocked} />}>
+          <TechnologyArcReactor3D isOverclocked={isOverclocked} />
+        </Suspense>
+      </group>
+    );
+  }
+
+  if (techId === 'vibranium-shield') {
+    return (
+      <group scale={0.9}>
+        <Suspense fallback={<ProceduralTechHologram techId={techId} isOverclocked={isOverclocked} />}>
+          <ShieldModel3D isSpinning={isOverclocked} />
+        </Suspense>
+      </group>
+    );
+  }
+
+  return <ProceduralTechHologram techId={techId} isOverclocked={isOverclocked} />;
 }

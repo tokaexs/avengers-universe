@@ -80,13 +80,13 @@ export default function IronManHelmet3D() {
     const ptrY = state.pointer.y * 0.25;
 
     if (groupRef.current) {
-      groupRef.current.rotation.y = Math.sin(t * 0.6) * 0.25 + ptrX;
+      groupRef.current.rotation.y = Math.PI + Math.sin(t * 0.6) * 0.25 + ptrX;
       groupRef.current.rotation.x = Math.cos(t * 0.4) * 0.1 - ptrY;
       groupRef.current.position.y = Math.sin(t * 1.4) * 0.04;
     }
 
     if (eyeLightRef.current) {
-      eyeLightRef.current.intensity = 3.5 + Math.sin(t * 3.5) * 1.0;
+      eyeLightRef.current.intensity = 4.0 + Math.sin(t * 3.5) * 1.2;
     }
   });
 
@@ -94,18 +94,18 @@ export default function IronManHelmet3D() {
     <group ref={groupRef} position={[0, 0, 0]}>
       <primitive object={clonedScene} scale={[normalizedScale, normalizedScale, normalizedScale]} />
 
-      {/* Glowing Ocular Light Beam */}
+      {/* Glowing Ocular Light Beam on face */}
       <pointLight
         ref={eyeLightRef}
-        position={[0, 0.1, 1.2]}
+        position={[0, 0.1, -1.2]}
         color="#00e5ff"
-        intensity={4}
-        distance={5}
+        intensity={5}
+        distance={6}
       />
 
       {/* Gold & Red Rim Highlights */}
-      <pointLight position={[-2, 1.5, -1]} color="#ffd700" intensity={3} distance={6} />
-      <pointLight position={[2, 0.5, 1.5]} color="#ff2233" intensity={2.5} distance={6} />
+      <pointLight position={[-2, 1.5, 1]} color="#ffd700" intensity={3.5} distance={6} />
+      <pointLight position={[2, 0.5, -1.5]} color="#ff2233" intensity={3} distance={6} />
     </group>
   );
 }

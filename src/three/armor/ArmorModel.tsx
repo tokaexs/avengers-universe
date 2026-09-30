@@ -6,9 +6,11 @@ import type { IronManSuit } from '../../data/ironManSuits';
 
 // Preload authentic 3D armor models
 useGLTF.preload('/models/ironman/iron_man.glb');
+useGLTF.preload('/models/ironman/iron_man_mark1.glb');
 useGLTF.preload('/models/ironman/iron_man_mark7.glb');
 useGLTF.preload('/models/ironman/iron_man_rig.glb');
 useGLTF.preload('/models/ironman/nano_tech.glb');
+useGLTF.preload('/models/ironman/hulkbuster.glb');
 
 interface ArmorModelProps {
   suit: IronManSuit;
@@ -88,8 +90,14 @@ function GLBArmorMesh({
     // Center the model cleanly around origin
     clone.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
 
+    // If Hulkbuster model is exported facing backward, rotate 180 deg to face camera
+    const isHulkbusterModel = isHulkbuster || modelPath.includes('hulkbuster');
+    if (isHulkbusterModel) {
+      clone.rotation.y = Math.PI;
+    }
+
     return { clonedScene: clone, normalizedScale: scale };
-  }, [scene, isHulkbuster]);
+  }, [scene, isHulkbuster, modelPath]);
 
   useFrame((state) => {
     if (!modelRef.current) return;
@@ -405,12 +413,7 @@ function ProceduralArmorMesh({
 export default function ArmorModel(props: ArmorModelProps) {
   const { suit, isAssembling } = props;
 
-  // Hulkbuster has its custom oversized armor chassis
-  if (suit.isHulkbuster) {
-    return <ProceduralArmorMesh {...props} />;
-  }
-
-  // Use dedicated model if specified (e.g. Mark III, Mark VII, Mark L, Mark LXXXV),
+  // Use dedicated model if specified (e.g. Mark I, Mark III, Mark VII, Mark XLIV Hulkbuster, Mark L, Mark LXXXV),
   // otherwise standardize to authentic iron_man.glb for all other suits
   const modelToUse = suit.modelPath || '/models/ironman/iron_man.glb';
 
@@ -420,7 +423,7 @@ export default function ArmorModel(props: ArmorModelProps) {
         <GLBArmorMesh
           modelPath={modelToUse}
           isInspecting={props.isInspecting}
-          isHulkbuster={false}
+          isHulkbuster={!!suit.isHulkbuster}
         />
       </Suspense>
     );
