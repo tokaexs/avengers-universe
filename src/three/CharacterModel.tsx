@@ -1,16 +1,18 @@
-import { useRef } from 'react';
+import { useRef, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import IronManHelmet3D from './IronManHelmet3D';
+import ShieldModel3D from './ShieldModel3D';
+import HammerModel3D from './HammerModel3D';
 
 interface CharacterModelProps {
+  heroId?: string;
   modelPath?: string;
   accentColor?: string;
   powerClass?: string;
 }
 
-export default function CharacterModel({
-  accentColor = '#00e5ff',
-}: CharacterModelProps) {
+function ProceduralHologramArtifact({ accentColor = '#00e5ff' }: { accentColor?: string }) {
   const groupRef = useRef<THREE.Group>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
@@ -94,4 +96,35 @@ export default function CharacterModel({
       />
     </group>
   );
+}
+
+export default function CharacterModel({
+  heroId,
+  accentColor = '#00e5ff',
+}: CharacterModelProps) {
+  if (heroId === 'iron-man') {
+    return (
+      <Suspense fallback={<ProceduralHologramArtifact accentColor={accentColor} />}>
+        <IronManHelmet3D />
+      </Suspense>
+    );
+  }
+
+  if (heroId === 'captain-america') {
+    return (
+      <Suspense fallback={<ProceduralHologramArtifact accentColor={accentColor} />}>
+        <ShieldModel3D />
+      </Suspense>
+    );
+  }
+
+  if (heroId === 'thor') {
+    return (
+      <Suspense fallback={<ProceduralHologramArtifact accentColor={accentColor} />}>
+        <HammerModel3D weaponType="stormbreaker" />
+      </Suspense>
+    );
+  }
+
+  return <ProceduralHologramArtifact accentColor={accentColor} />;
 }

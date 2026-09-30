@@ -126,7 +126,11 @@ export default function HeroesPage({
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[3, 4, 3]} intensity={1.5} color="#ffffff" />
                 <directionalLight position={[-3, -3, -2]} intensity={1.8} color={activeHero.accentColor} />
-                <CharacterModel accentColor={activeHero.accentColor} powerClass={activeHero.powerClass} />
+                <CharacterModel
+                  heroId={activeHero.id}
+                  accentColor={activeHero.accentColor}
+                  powerClass={activeHero.powerClass}
+                />
                 <Particles />
                 <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 1.8} minPolarAngle={Math.PI / 2.4} />
               </Suspense>
