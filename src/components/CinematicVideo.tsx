@@ -7,7 +7,7 @@ interface CinematicVideoProps {
 }
 
 export default function CinematicVideo({
-  src = '/assets/video/avengers-hero.mp4',
+  src,
   poster,
   className = '',
 }: CinematicVideoProps) {
