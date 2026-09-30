@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import SoundToggle from './SoundToggle';
 
 interface NavbarProps {
@@ -24,61 +25,49 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    if (onPlayClick) onPlayClick();
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const navItems = [
+    { to: '/', label: 'HOME' },
+    { to: '/heroes', label: 'HEROES' },
+    { to: '/timeline', label: 'TIMELINE' },
+    { to: '/threats', label: 'THREATS' },
+    { to: '/technology', label: 'TECHNOLOGY' },
+    { to: '/missions', label: 'MISSIONS' },
+    { to: '/initiative', label: 'INITIATIVE' },
+    { to: '/doomsday', label: 'DOOMSDAY' },
+  ];
 
   return (
     <header className={`cinematic-navbar ${scrolled ? 'cinematic-navbar-scrolled' : ''}`}>
       <div className="cinematic-nav-container">
         
         {/* Left: Brand / Crest */}
-        <div
+        <Link
+          to="/"
           className="cinematic-nav-brand"
-          onClick={() => scrollToSection('hero')}
+          onClick={onPlayClick}
           onMouseEnter={onPlayHover}
-          role="button"
-          tabIndex={0}
         >
           <span className="brand-dot" />
           <span className="brand-text">AVENGERS</span>
-        </div>
+        </Link>
 
-        {/* Right: Minimal Navigation & Sound */}
+        {/* Right: Multi-Page Navigation & Sound */}
         <div className="cinematic-nav-right">
           <nav className="cinematic-nav-links">
-            <button
-              className="nav-link"
-              onClick={() => scrollToSection('initiative')}
-              onMouseEnter={onPlayHover}
-            >
-              INITIATIVE
-            </button>
-            <button
-              className="nav-link"
-              onClick={() => scrollToSection('heroes')}
-              onMouseEnter={onPlayHover}
-            >
-              HEROES
-            </button>
-            <button
-              className="nav-link"
-              onClick={() => scrollToSection('timeline')}
-              onMouseEnter={onPlayHover}
-            >
-              TIMELINE
-            </button>
-            <button
-              className="nav-link"
-              onClick={() => scrollToSection('threats')}
-              onMouseEnter={onPlayHover}
-            >
-              THREATS
-            </button>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? 'nav-link-active' : ''} ${item.to === '/doomsday' ? 'nav-link-doomsday' : ''}`
+                }
+                onClick={onPlayClick}
+                onMouseEnter={onPlayHover}
+                end={item.to === '/'}
+              >
+                {item.label}
+              </NavLink>
+            ))}
           </nav>
 
           {/* Sound Architecture Toggle */}
