@@ -3,8 +3,6 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, Center } from "@react-three/drei";
 import * as THREE from "three";
 
-useGLTF.preload("/models/titles/avengers_title.glb");
-
 interface AvengersLogo3DProps {
   scrollRef?: RefObject<number>;
 }

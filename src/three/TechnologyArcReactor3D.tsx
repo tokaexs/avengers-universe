@@ -3,8 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-useGLTF.preload('/models/ironman/arc_reactor.glb');
-
 interface TechnologyArcReactor3DProps {
   isOverclocked?: boolean;
 }

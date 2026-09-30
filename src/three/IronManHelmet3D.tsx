@@ -3,8 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-useGLTF.preload('/models/ironman/iron_man_helmet.glb');
-
 export default function IronManHelmet3D() {
   const { scene } = useGLTF('/models/ironman/iron_man_helmet.glb');
   const groupRef = useRef<THREE.Group>(null);

@@ -4,14 +4,6 @@ import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import type { IronManSuit } from '../../data/ironManSuits';
 
-// Preload authentic 3D armor models
-useGLTF.preload('/models/ironman/iron_man.glb');
-useGLTF.preload('/models/ironman/iron_man_mark1.glb');
-useGLTF.preload('/models/ironman/iron_man_mark7.glb');
-useGLTF.preload('/models/ironman/iron_man_rig.glb');
-useGLTF.preload('/models/ironman/nano_tech.glb');
-useGLTF.preload('/models/ironman/hulkbuster.glb');
-
 interface ArmorModelProps {
   suit: IronManSuit;
   isInspecting?: boolean;

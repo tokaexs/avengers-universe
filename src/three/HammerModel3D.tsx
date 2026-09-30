@@ -200,6 +200,3 @@ export default function HammerModel3D(props: HammerModel3DProps) {
 
   return <ProceduralWeapons {...props} />;
 }
-
-// Preload GLB
-useGLTF.preload('/models/thor/stormbreaker.glb');

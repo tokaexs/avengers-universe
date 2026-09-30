@@ -201,6 +201,3 @@ export default function ShieldModel3D(props: ShieldModel3DProps) {
     return <ProceduralShield {...props} />;
   }
 }
-
-// Preload GLB
-useGLTF.preload('/models/captain-america/shield.glb');

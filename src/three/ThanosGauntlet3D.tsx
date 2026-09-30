@@ -152,6 +152,3 @@ export default function ThanosGauntlet3D(props: ThanosGauntlet3DProps) {
     return <ProceduralGauntlet {...props} />;
   }
 }
-
-// Preload GLB
-useGLTF.preload('/models/thanos/thanos.glb');

@@ -179,5 +179,3 @@ export default function UltronCore3D(props: UltronCore3DProps) {
     </Suspense>
   );
 }
-
-useGLTF.preload('/models/ultron/ultron.glb');
