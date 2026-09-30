@@ -4,66 +4,144 @@ import * as THREE from 'three';
 
 interface ShieldModel3DProps {
   isSpinning?: boolean;
+  selectedHotspot?: string | null;
 }
 
-export default function ShieldModel3D({ isSpinning = false }: ShieldModel3DProps) {
+export default function ShieldModel3D({
+  isSpinning = false,
+  selectedHotspot = null,
+}: ShieldModel3DProps) {
   const shieldRef = useRef<THREE.Group>(null);
   const ringGlowRef = useRef<THREE.Mesh>(null);
+  const starGlowRef = useRef<THREE.Mesh>(null);
 
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
     if (shieldRef.current) {
-      const speed = isSpinning ? 12 : 0.6;
-      shieldRef.current.rotation.z += delta * speed;
-      shieldRef.current.rotation.y = Math.sin(t * 0.8) * 0.25;
-      shieldRef.current.rotation.x = Math.cos(t * 0.6) * 0.15;
+      if (isSpinning) {
+        shieldRef.current.rotation.z += delta * 12;
+        shieldRef.current.rotation.y = Math.sin(t * 2) * 0.4;
+      } else {
+        shieldRef.current.rotation.z += delta * 0.35;
+        shieldRef.current.rotation.y = Math.sin(t * 0.7) * 0.3;
+        shieldRef.current.rotation.x = Math.cos(t * 0.5) * 0.15;
+      }
     }
 
     if (ringGlowRef.current) {
-      ringGlowRef.current.scale.setScalar(1 + Math.sin(t * 3) * 0.04);
+      ringGlowRef.current.scale.setScalar(1 + Math.sin(t * 3) * 0.05);
+    }
+    if (starGlowRef.current) {
+      starGlowRef.current.scale.setScalar(1 + Math.cos(t * 4) * 0.08);
     }
   });
 
+  const isStarActive = selectedHotspot === 'star';
+  const isRingsActive = selectedHotspot === 'rings';
+  const isStrapsActive = selectedHotspot === 'straps';
+  const isRimActive = selectedHotspot === 'rim';
+
   return (
-    <group ref={shieldRef} scale={1.4}>
-      {/* Outer Red Ring */}
+    <group ref={shieldRef} scale={1.35}>
+      {/* Front Convex Dome - Outer Red Ring */}
       <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[1.2, 1.2, 0.04, 64]} />
-        <meshStandardMaterial color="#c8102e" metalness={0.92} roughness={0.18} />
+        <cylinderGeometry args={[1.25, 1.25, 0.04, 64]} />
+        <meshStandardMaterial
+          color={isRimActive ? '#ff2a4b' : '#b8122a'}
+          metalness={0.92}
+          roughness={0.16}
+          emissive={isRimActive ? '#ff2a4b' : '#000000'}
+          emissiveIntensity={isRimActive ? 0.6 : 0}
+        />
       </mesh>
 
-      {/* Silver Ring */}
-      <mesh position={[0, 0, 0.01]}>
-        <cylinderGeometry args={[0.96, 0.96, 0.042, 64]} />
-        <meshStandardMaterial color="#e8edf2" metalness={0.98} roughness={0.12} />
+      {/* Silver Concentric Ring */}
+      <mesh position={[0, 0, 0.015]}>
+        <cylinderGeometry args={[1.02, 1.02, 0.042, 64]} />
+        <meshStandardMaterial
+          color={isRingsActive ? '#ffffff' : '#d8e2ec'}
+          metalness={0.98}
+          roughness={0.1}
+          emissive={isRingsActive ? '#00e5ff' : '#000000'}
+          emissiveIntensity={isRingsActive ? 0.4 : 0}
+        />
       </mesh>
 
-      {/* Inner Red Ring */}
-      <mesh position={[0, 0, 0.02]}>
-        <cylinderGeometry args={[0.72, 0.72, 0.044, 64]} />
-        <meshStandardMaterial color="#c8102e" metalness={0.92} roughness={0.18} />
-      </mesh>
-
-      {/* Blue Center Disc */}
+      {/* Inner Red Concentric Ring */}
       <mesh position={[0, 0, 0.03]}>
-        <cylinderGeometry args={[0.48, 0.48, 0.046, 64]} />
-        <meshStandardMaterial color="#0044aa" metalness={0.95} roughness={0.15} />
+        <cylinderGeometry args={[0.78, 0.78, 0.044, 64]} />
+        <meshStandardMaterial
+          color={isRingsActive ? '#ff3b56' : '#b8122a'}
+          metalness={0.92}
+          roughness={0.16}
+        />
       </mesh>
 
-      {/* Center 5-Point Vibranium Star */}
-      <mesh position={[0, 0, 0.06]} rotation={[0, 0, Math.PI / 10]}>
-        <octahedronGeometry args={[0.26, 0]} />
-        <meshStandardMaterial color="#ffffff" metalness={0.99} roughness={0.08} />
+      {/* Central Blue Disc */}
+      <mesh position={[0, 0, 0.045]}>
+        <cylinderGeometry args={[0.52, 0.52, 0.046, 64]} />
+        <meshStandardMaterial
+          color={isStarActive ? '#0055ff' : '#003399'}
+          metalness={0.95}
+          roughness={0.14}
+          emissive={isStarActive ? '#00e5ff' : '#000000'}
+          emissiveIntensity={isStarActive ? 0.5 : 0}
+        />
       </mesh>
 
-      {/* Subtle Kinetic Shockwave Ring */}
-      <mesh ref={ringGlowRef} position={[0, 0, 0.04]}>
-        <torusGeometry args={[1.24, 0.015, 16, 64]} />
-        <meshBasicMaterial color="#00e5ff" transparent opacity={0.4} />
+      {/* 5-Point Vibranium Star */}
+      <group position={[0, 0, 0.075]}>
+        <mesh ref={starGlowRef}>
+          <octahedronGeometry args={[0.28, 0]} />
+          <meshStandardMaterial
+            color="#ffffff"
+            metalness={0.99}
+            roughness={0.06}
+            emissive={isStarActive ? '#00e5ff' : '#ffffff'}
+            emissiveIntensity={isStarActive ? 0.8 : 0.2}
+          />
+        </mesh>
+      </group>
+
+      {/* Backside: Dual Leather & Magnetic Forearm Straps */}
+      <group position={[0, 0, -0.04]}>
+        <mesh position={[-0.32, 0, 0]}>
+          <boxGeometry args={[0.1, 0.5, 0.04]} />
+          <meshStandardMaterial
+            color={isStrapsActive ? '#a06030' : '#4a2c16'}
+            roughness={0.8}
+            metalness={isStrapsActive ? 0.6 : 0.2}
+          />
+        </mesh>
+        <mesh position={[0.32, 0, 0]}>
+          <boxGeometry args={[0.1, 0.5, 0.04]} />
+          <meshStandardMaterial
+            color={isStrapsActive ? '#a06030' : '#4a2c16'}
+            roughness={0.8}
+            metalness={isStrapsActive ? 0.6 : 0.2}
+          />
+        </mesh>
+        {/* Back Disc Plate */}
+        <mesh position={[0, 0, -0.01]}>
+          <cylinderGeometry args={[1.2, 1.2, 0.02, 48]} />
+          <meshStandardMaterial color="#222830" metalness={0.9} roughness={0.3} />
+        </mesh>
+      </group>
+
+      {/* Kinetic Shockwave Energy Ring */}
+      <mesh ref={ringGlowRef} position={[0, 0, 0.05]}>
+        <torusGeometry args={[1.28, 0.018, 16, 64]} />
+        <meshBasicMaterial
+          color="#00e5ff"
+          transparent
+          opacity={isSpinning ? 0.85 : 0.3}
+          blending={THREE.AdditiveBlending}
+        />
       </mesh>
 
-      <pointLight position={[0, 0, 1.5]} color="#4d88ff" intensity={4} distance={6} />
+      <pointLight position={[0, 0, 2]} color="#00e5ff" intensity={4} distance={6} />
+      <pointLight position={[0, 0, -2]} color="#ff3344" intensity={2} distance={4} />
     </group>
   );
 }

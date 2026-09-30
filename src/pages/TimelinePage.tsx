@@ -1,5 +1,11 @@
-import { useState } from 'react';
-import { TIMELINE_EVENTS, type TimelineEvent } from '../data/timeline';
+import { useState, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Link } from 'react-router-dom';
+import { TIMELINE_EVENTS } from '../data/timeline';
+import TimelineRings3D from '../three/TimelineRings3D';
+import Particles from '../three/Particles';
+import Button from '../components/Button';
 
 interface TimelinePageProps {
   onPlayHover?: () => void;
@@ -10,127 +16,143 @@ export default function TimelinePage({
   onPlayHover,
   onPlayClick,
 }: TimelinePageProps) {
-  const [selectedEvent, setSelectedEvent] = useState<TimelineEvent>(TIMELINE_EVENTS[0]);
+  const [activeEraIdx, setActiveEraIdx] = useState(1); // Start at 2012 Battle of New York
+  const [isPlayingIncident, setIsPlayingIncident] = useState(false);
+
+  const currentEvent = TIMELINE_EVENTS[activeEraIdx] || TIMELINE_EVENTS[0];
+
+  const handleNextEra = () => {
+    const nextIdx = (activeEraIdx + 1) % TIMELINE_EVENTS.length;
+    setActiveEraIdx(nextIdx);
+    if (onPlayClick) onPlayClick();
+  };
+
+  const handlePrevEra = () => {
+    const prevIdx = (activeEraIdx - 1 + TIMELINE_EVENTS.length) % TIMELINE_EVENTS.length;
+    setActiveEraIdx(prevIdx);
+    if (onPlayClick) onPlayClick();
+  };
+
+  const triggerIncidentPlayback = () => {
+    if (onPlayClick) onPlayClick();
+    setIsPlayingIncident(true);
+    setTimeout(() => setIsPlayingIncident(false), 2400);
+  };
 
   return (
     <div
-      className="timeline-full-page"
+      className="timeline-spatial-page"
       style={{
-        '--event-accent': selectedEvent.accentColor,
-        '--event-glow': selectedEvent.glowColor,
+        '--era-accent': currentEvent.accentColor,
+        '--era-glow': currentEvent.glowColor,
       } as React.CSSProperties}
     >
-      {/* Background Ambient Glow */}
-      <div className="timeline-bg-glow" />
+      {/* Background Volumetric Temporal Fog */}
+      <div className="archive-bg-ambient timeline-bg" />
 
-      {/* Top HUD bar */}
-      <div className="gateway-header-bar">
-        <div className="gateway-tag">
-          <span className="bracket">[</span> S.H.I.E.L.D. TEMPORAL ARCHIVE // 1942 - PRESENT <span className="bracket">]</span>
+      {/* Top Header Breadcrumb HUD */}
+      <div className="stark-header-hud">
+        <div className="breadcrumb-box">
+          <Link to="/" className="back-link" onClick={onPlayClick} onMouseEnter={onPlayHover}>
+            ← COMMAND ARCHIVE
+          </Link>
+          <span className="sep-slash">//</span>
+          <span className="current-sub">SACRED TIMELINE CHRONOLOGY // TVA CLASSIFICATION #616</span>
         </div>
-        <div className="gateway-status">
-          ACTIVE ERA: {selectedEvent.era} // CLEARANCE LEVEL 10
+        <div className="stark-telemetry-tag">
+          BRANCH STABILITY: 99.8% // TEMPORAL ANCHOR {currentEvent.year}
         </div>
       </div>
 
-      {/* Hero Header */}
-      <div className="timeline-page-header">
-        <div className="sub-tag">SACRED TIMELINE CHRONOLOGY</div>
-        <h1 className="hero-page-title">THE TIMELINE</h1>
-        <p className="hero-page-desc">
-          Chronological record of Earth's defense, multiversal incursions, cosmic battles, and pivotal moments in Avengers history.
-        </p>
-      </div>
+      {/* Main Spatial Stage */}
+      <div className="timeline-stage-layout">
+        
+        {/* Left Column: Era Dossier & Historical Briefing */}
+        <div className="timeline-left-col">
+          <div className="era-id-pill">{currentEvent.year} // {currentEvent.era}</div>
+          <h1 className="era-giant-title">{currentEvent.title}</h1>
+          <div className="era-subtitle">{currentEvent.subtitle} • {currentEvent.location}</div>
+          <p className="era-description">{currentEvent.description}</p>
 
-      {/* Interactive Year Selector Bar */}
-      <div className="timeline-selector-strip">
-        {TIMELINE_EVENTS.map((item) => {
-          const isSelected = selectedEvent.id === item.id;
-          return (
-            <button
-              key={item.id}
-              className={`timeline-year-btn ${isSelected ? 'timeline-year-btn-active' : ''}`}
-              onClick={() => {
-                setSelectedEvent(item);
-                if (onPlayClick) onPlayClick();
-              }}
-              onMouseEnter={onPlayHover}
-              style={{ '--item-accent': item.accentColor } as React.CSSProperties}
-            >
-              <span className="timeline-btn-year">{item.year}</span>
-              <span className="timeline-btn-era">{item.era}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Active Event Spotlight Showcase */}
-      <div className="timeline-spotlight-card">
-        <div className="spotlight-left">
-          <div className="spotlight-badge-row">
-            <span className="spotlight-year-tag">{selectedEvent.year}</span>
-            <span className="spotlight-threat-tag">{selectedEvent.threatLevel}</span>
-          </div>
-
-          <h2 className="spotlight-title">{selectedEvent.title}</h2>
-          <div className="spotlight-subtitle">{selectedEvent.subtitle}</div>
-          <p className="spotlight-desc">{selectedEvent.description}</p>
-
-          <div className="spotlight-location-box">
-            <span className="loc-label">TACTICAL THEATRE:</span>
-            <span className="loc-val">{selectedEvent.location}</span>
-          </div>
-
-          <div className="spotlight-stats-grid">
-            {selectedEvent.stats.map((st, i) => (
-              <div key={i} className="spotlight-stat-item">
-                <span className="s-label">{st.label}</span>
-                <span className="s-val">{st.value}</span>
+          <div className="era-stats-grid">
+            {currentEvent.stats.map((st, sIdx) => (
+              <div key={sIdx} className="era-stat-card">
+                <span className="st-lbl">{st.label}</span>
+                <span className="st-val">{st.value}</span>
               </div>
             ))}
           </div>
-        </div>
 
-        <div className="spotlight-right">
-          <div className="spotlight-graphic-frame">
-            <img
-              src={selectedEvent.image}
-              alt={selectedEvent.title}
-              className="spotlight-graphic"
-            />
-            <span className="h-reticle tl" />
-            <span className="h-reticle tr" />
-            <span className="h-reticle bl" />
-            <span className="h-reticle br" />
+          <div className="era-controls-bar">
+            <Button
+              variant="secondary"
+              onClick={handlePrevEra}
+              onHoverSound={onPlayHover}
+              className="ctrl-btn"
+            >
+              ← PREV ERA
+            </Button>
+            <Button
+              variant="primary"
+              onClick={triggerIncidentPlayback}
+              onHoverSound={onPlayHover}
+              className="ctrl-btn"
+            >
+              {isPlayingIncident ? '⚡ PLAYING INCIDENT SIMULATION' : '▶ SIMULATE INCIDENT'}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleNextEra}
+              onHoverSound={onPlayHover}
+              className="ctrl-btn"
+            >
+              NEXT ERA →
+            </Button>
           </div>
         </div>
+
+        {/* Center/Right: 3D Spatial Quantum Timeline Viewer */}
+        <div className="timeline-center-3d">
+          <Canvas camera={{ position: [0, 0, 4.4], fov: 42 }}>
+            <Suspense fallback={null}>
+              <ambientLight intensity={0.4} />
+              <directionalLight position={[4, 5, 4]} color={currentEvent.accentColor} intensity={2.0} />
+              <directionalLight position={[-4, -3, -2]} color="#ffffff" intensity={1.5} />
+              <TimelineRings3D activeEraIdx={activeEraIdx} />
+              <Particles />
+              <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 1.7} minPolarAngle={Math.PI / 2.5} />
+            </Suspense>
+          </Canvas>
+
+          {/* Environmental Floating Watermark */}
+          <div className="timeline-spatial-watermark">
+            <span>{currentEvent.year}</span>
+          </div>
+        </div>
+
       </div>
 
-      {/* All Events Chronological List Below */}
-      <div className="timeline-events-flow">
-        <h3 className="flow-title">COMPLETE CHRONOLOGICAL LOGS</h3>
-        <div className="flow-grid">
-          {TIMELINE_EVENTS.map((ev, idx) => (
-            <div
-              key={ev.id}
-              className={`flow-card ${ev.id === selectedEvent.id ? 'flow-card-active' : ''}`}
-              onClick={() => {
-                setSelectedEvent(ev);
-                if (onPlayClick) onPlayClick();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onMouseEnter={onPlayHover}
-              style={{ '--card-accent': ev.accentColor } as React.CSSProperties}
-            >
-              <div className="flow-card-top">
-                <span className="flow-num">0{idx + 1}</span>
-                <span className="flow-year">{ev.year}</span>
-              </div>
-              <h4 className="flow-event-title">{ev.title}</h4>
-              <p className="flow-summary">{ev.subtitle}</p>
-              <div className="flow-location">{ev.location}</div>
-            </div>
-          ))}
+      {/* Bottom Horizontal Era Scrubber */}
+      <div className="timeline-bottom-scrubber">
+        <div className="scrubber-track">
+          {TIMELINE_EVENTS.map((ev, idx) => {
+            const isActive = activeEraIdx === idx;
+            return (
+              <button
+                key={ev.id}
+                className={`scrubber-node ${isActive ? 'scrubber-node-active' : ''}`}
+                onClick={() => {
+                  setActiveEraIdx(idx);
+                  if (onPlayClick) onPlayClick();
+                }}
+                onMouseEnter={onPlayHover}
+              >
+                <span className="node-year">{ev.year}</span>
+                <span className="node-title">{ev.title}</span>
+                <span className="node-dot" />
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

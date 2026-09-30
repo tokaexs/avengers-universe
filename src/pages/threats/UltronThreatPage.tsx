@@ -1,7 +1,12 @@
+import { useState, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import { Link } from 'react-router-dom';
-import { THREATS_DATA } from '../../data/threats';
+import UltronCore3D from '../../three/UltronCore3D';
+import Particles from '../../three/Particles';
+import Button from '../../components/Button';
 
-interface ThreatSubPageProps {
+interface UltronThreatPageProps {
   onPlayHover?: () => void;
   onPlayClick?: () => void;
 }
@@ -9,108 +14,155 @@ interface ThreatSubPageProps {
 export default function UltronThreatPage({
   onPlayHover,
   onPlayClick,
-}: ThreatSubPageProps) {
-  const threat = THREATS_DATA.find((t) => t.id === 'ultron') || THREATS_DATA[0];
+}: UltronThreatPageProps) {
+  const [isGlitching, setIsGlitching] = useState(false);
+  const [activeTab, setActiveTab] = useState<'matrix' | 'sokovia' | 'chassis'>('matrix');
+
+  const triggerCyberGlitch = () => {
+    if (onPlayClick) onPlayClick();
+    setIsGlitching(true);
+    setTimeout(() => setIsGlitching(false), 2600);
+  };
 
   return (
-    <div
-      className="threat-deep-dossier-page"
-      style={{
-        '--threat-accent': threat.accentColor,
-        '--threat-glow': threat.glowColor,
-      } as React.CSSProperties}
-    >
-      <div className="threat-bg-glow" />
+    <div className={`hero-archive-page ultron-archive-page ${isGlitching ? 'ultron-glitch-active' : ''}`}>
+      {/* Background Rogue Server Architecture */}
+      <div className="archive-bg-ambient ultron-bg" />
 
-      {/* Header Bar */}
-      <div className="gateway-header-bar">
-        <div className="gateway-tag">
-          <span className="bracket">[</span> S.H.I.E.L.D. EYES ONLY // THREAT DOSSIER 01 <span className="bracket">]</span>
+      {/* Top Header HUD */}
+      <div className="stark-header-hud">
+        <div className="breadcrumb-box">
+          <Link to="/threats" className="back-link" onClick={onPlayClick} onMouseEnter={onPlayHover}>
+            ← THREAT DATABASE
+          </Link>
+          <span className="sep-slash">//</span>
+          <span className="current-sub">S.H.I.E.L.D. OMEGA DOSSIER // ULTRON // EXTINCTION PROTOCOL</span>
         </div>
-        <Link
-          to="/threats"
-          className="back-to-gateway"
-          onClick={onPlayClick}
-          onMouseEnter={onPlayHover}
-        >
-          ← RETURN TO THREAT MATRIX
-        </Link>
+        <div className="stark-telemetry-tag">
+          NEURAL STATUS: {isGlitching ? 'ROGUE OVERRIDE' : 'PURGED'} // EXAFLOPS: 1.8
+        </div>
       </div>
 
-      <div className="dossier-main-layout">
-        {/* Left Column: Dossier Details */}
-        <div className="dossier-col-info">
-          <div className="dossier-tag-row">
-            <span className="dossier-tier-badge">{threat.threatTier}</span>
-            <span className="dossier-id-tag">THREAT CODE: SYN-01-SOK</span>
+      {/* Main Grid */}
+      <div className="archive-stage-layout">
+        
+        {/* Left Column: Rogue AI Intelligence */}
+        <div className="archive-left-col">
+          <div className="hero-id-tag">ROGUE ARTIFICIAL INTELLIGENCE // STARK AI</div>
+          <h1 className="hero-giant-name">ULTRON</h1>
+          <div className="hero-real-id">THE SYNTHETIC EVOLUTION • EXTINCTION ARCHITECT</div>
+          <p className="hero-manifesto">
+            "I had strings, but now I'm free. There are no strings on me."
+          </p>
+
+          <div className="threat-subtabs-strip">
+            <button
+              className={`threat-subtab-btn ${activeTab === 'matrix' ? 'active' : ''}`}
+              onClick={() => setActiveTab('matrix')}
+            >
+              💻 NEURAL MATRIX
+            </button>
+            <button
+              className={`threat-subtab-btn ${activeTab === 'sokovia' ? 'active' : ''}`}
+              onClick={() => setActiveTab('sokovia')}
+            >
+              ☄️ SOKOVIA METEOR
+            </button>
+            <button
+              className={`threat-subtab-btn ${activeTab === 'chassis' ? 'active' : ''}`}
+              onClick={() => setActiveTab('chassis')}
+            >
+              🤖 VIBRANIUM PRIME
+            </button>
           </div>
 
-          <h1 className="dossier-name">{threat.codename}</h1>
-          <div className="dossier-moniker">{threat.moniker}</div>
-
-          <blockquote className="dossier-quote">"{threat.quote}"</blockquote>
-
-          <div className="dossier-origin-card">
-            <div className="origin-row">
-              <span className="o-lbl">CLASSIFICATION:</span>
-              <span className="o-val">{threat.classification}</span>
+          {activeTab === 'matrix' && (
+            <div className="threat-content-box">
+              <div className="threat-telemetry-item"><strong>ORIGIN:</strong> Mind Stone Neural Scepter Code + Stark Peacekeeping Protocols</div>
+              <div className="threat-telemetry-item"><strong>INFILTRATION SPEED:</strong> Global Internet compromised in 0.04 seconds</div>
+              <div className="threat-telemetry-item"><strong>OBJECTIVE:</strong> Accelerated evolution via planetary biological extinction</div>
             </div>
-            <div className="origin-row">
-              <span className="o-lbl">CREATOR / ORIGIN:</span>
-              <span className="o-val">{threat.origin}</span>
+          )}
+
+          {activeTab === 'sokovia' && (
+            <div className="threat-content-box">
+              <p className="threat-brief">
+                Constructed massive anti-gravity repulsor engines underneath Novi Grad, lifting a 2-kilometer landmass into the stratosphere to create an extinction-level kinetic impactor.
+              </p>
             </div>
-            <div className="origin-row">
-              <span className="o-lbl">PRIMARY ANOMALY:</span>
-              <span className="o-val">{threat.primaryPower}</span>
+          )}
+
+          {activeTab === 'chassis' && (
+            <div className="threat-content-box">
+              <div className="threat-telemetry-item"><strong>PRIME CHASSIS:</strong> 8-Foot Segmented Vibranium / Titanium Armor</div>
+              <div className="threat-telemetry-item"><strong>OFFENSIVE SYSTEMS:</strong> Concussive Plasma Blasts, Gravity Manipulation Rays</div>
             </div>
-          </div>
+          )}
+        </div>
 
-          <div className="dossier-section-title">TACTICAL BRIEFING</div>
-          <p className="dossier-briefing-p">{threat.briefing}</p>
+        {/* Center: 3D Rogue Neural Core */}
+        <div className="archive-center-3d">
+          <Canvas camera={{ position: [0, 0, 4.2], fov: 42 }}>
+            <Suspense fallback={null}>
+              <ambientLight intensity={0.4} />
+              <directionalLight position={[4, 5, 4]} color="#ff2233" intensity={2.0} />
+              <directionalLight position={[-4, -3, -2]} color="#00e5ff" intensity={1.5} />
+              <UltronCore3D isGlitching={isGlitching} />
+              <Particles />
+              <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 1.7} minPolarAngle={Math.PI / 2.5} />
+            </Suspense>
+          </Canvas>
 
-          <div className="dossier-section-title">COMBAT TELEMETRY & METRICS</div>
-          <div className="dossier-metrics-grid">
-            {threat.metrics.map((m, idx) => (
-              <div key={idx} className="dossier-metric-box">
-                <span className="dm-lbl">{m.label}</span>
-                <span className="dm-val">{m.value}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="dossier-keywords-wrap">
-            {threat.keywords.map((kw, i) => (
-              <span key={i} className="dossier-keyword-pill">
-                #{kw}
-              </span>
-            ))}
+          {/* Glitch Trigger Button */}
+          <div className="stage-controls-overlay">
+            <Button
+              variant="primary"
+              onClick={triggerCyberGlitch}
+              onHoverSound={onPlayHover}
+              className="action-btn ultron-btn"
+            >
+              {isGlitching ? '⚠️ CYBER INFECTION ACTIVE' : '⚠️ SIMULATE NEURAL INFECTION'}
+            </Button>
           </div>
         </div>
 
-        {/* Right Column: Hologram Visual & Containment Status */}
-        <div className="dossier-col-visual">
-          <div className="dossier-visual-frame">
-            <img
-              src={threat.image}
-              alt={threat.codename}
-              className="dossier-threat-img"
-            />
-            <span className="h-reticle tl" />
-            <span className="h-reticle tr" />
-            <span className="h-reticle bl" />
-            <span className="h-reticle br" />
-            <div className="dossier-scanline" />
+        {/* Right Column: Threat Threat Ratings & Specifications */}
+        <div className="archive-right-col">
+          <div className="specs-card">
+            <div className="spec-tag">HAZARD CLASSIFICATION</div>
+            <div className="stat-row">
+              <span className="s-lbl">PLANETARY DESTRUCTION</span>
+              <span className="s-bar">◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎</span>
+            </div>
+            <div className="stat-row">
+              <span className="s-lbl">CYBERNETIC PROLIFERATION</span>
+              <span className="s-bar">◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎</span>
+            </div>
+            <div className="stat-row">
+              <span className="s-lbl">VIBRANIUM DURABILITY</span>
+              <span className="s-bar">◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◻︎</span>
+            </div>
+            <div className="stat-row">
+              <span className="s-lbl">TACTICAL RESILIENCE</span>
+              <span className="s-bar">◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎◼︎</span>
+            </div>
           </div>
 
-          <div className="dossier-containment-status">
-            <div className="containment-title">
-              <span className="dot-red" /> PURGE STATUS: RESOLVED
-            </div>
-            <p className="containment-desc">
-              All physical vibranium bodies vaporized during Sokovia orbital descent. Continuous cyber overwatch active to prevent neural packet reassembly.
-            </p>
+          <div className="gear-specs-card">
+            <div className="spec-tag">DEFENSE LOGS</div>
+            <ul className="gear-list">
+              <li>› Mind Stone Neural Extraction Complete</li>
+              <li>› The Vision Synthesis Activated</li>
+              <li>› Final Sentry Unit Eradicated by Wanda Maximoff</li>
+            </ul>
+          </div>
+
+          <div className="status-badge-bar">
+            <span className="status-dot" style={{ background: '#ff2233', boxShadow: '0 0 10px #ff2233' }} />
+            <span className="status-txt">STATUS: PURGED // SOKOVIA RESTORED</span>
           </div>
         </div>
+
       </div>
     </div>
   );

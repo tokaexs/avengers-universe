@@ -1,5 +1,11 @@
-import { useState } from 'react';
-import { MISSIONS_DATA, type Mission } from '../data/missions';
+import { useState, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Link } from 'react-router-dom';
+import { MISSIONS_DATA } from '../data/missions';
+import TacticalGlobe3D from '../three/TacticalGlobe3D';
+import Particles from '../three/Particles';
+import Button from '../components/Button';
 
 interface MissionsPageProps {
   onPlayHover?: () => void;
@@ -10,127 +16,139 @@ export default function MissionsPage({
   onPlayHover,
   onPlayClick,
 }: MissionsPageProps) {
-  const [selectedMission, setSelectedMission] = useState<Mission>(MISSIONS_DATA[0]);
+  const [selectedMissionIdx, setSelectedMissionIdx] = useState(0);
+  const [isSimulating, setIsSimulating] = useState(false);
+
+  const currentMission = MISSIONS_DATA[selectedMissionIdx] || MISSIONS_DATA[0];
+
+  const triggerMissionPlayback = () => {
+    if (onPlayClick) onPlayClick();
+    setIsSimulating(true);
+    setTimeout(() => setIsSimulating(false), 2400);
+  };
 
   return (
     <div
-      className="missions-archive-page"
+      className="missions-control-page"
       style={{
-        '--mission-accent': selectedMission.accentColor,
+        '--mission-accent': currentMission.accentColor,
       } as React.CSSProperties}
     >
-      <div className="missions-bg-glow" />
+      {/* Background Volumetric War Room Lighting */}
+      <div className="archive-bg-ambient mission-bg" />
 
-      {/* Header Bar */}
-      <div className="gateway-header-bar">
-        <div className="gateway-tag">
-          <span className="bracket">[</span> S.H.I.E.L.D. TACTICAL COMBAT LOGS // MISSION ARCHIVE <span className="bracket">]</span>
+      {/* Top Header HUD */}
+      <div className="stark-header-hud">
+        <div className="breadcrumb-box">
+          <Link to="/" className="back-link" onClick={onPlayClick} onMouseEnter={onPlayHover}>
+            ← COMMAND ARCHIVE
+          </Link>
+          <span className="sep-slash">//</span>
+          <span className="current-sub">S.H.I.E.L.D. STRATEGIC MISSION CONTROL // WAR ROOM OVERWATCH</span>
         </div>
-        <div className="gateway-status">
-          LOGGED OPERATIONS: 05 // WORLD SECURITY COUNCIL
+        <div className="stark-telemetry-tag">
+          MISSION STATUS: {currentMission.status} // CODE {currentMission.missionCode}
         </div>
       </div>
 
-      {/* Page Title */}
-      <div className="missions-page-header">
-        <div className="sub-tag">CLASSIFIED OPERATIONAL RECORDS</div>
-        <h1 className="hero-page-title">MISSIONS</h1>
-        <p className="hero-page-desc">
-          Declassified tactical briefings, deployment rosters, planetary battle damage assessments, and engagement outcomes.
-        </p>
-      </div>
-
-      {/* Main Grid: Mission List and Mission Detail Briefing */}
-      <div className="missions-layout-grid">
+      {/* Main War Room Grid */}
+      <div className="missions-stage-layout">
         
-        {/* Left Column: Mission Select Stack */}
-        <div className="missions-list-column">
-          <div className="missions-stack">
-            {MISSIONS_DATA.map((m) => {
-              const isSelected = selectedMission.id === m.id;
+        {/* Left Column: Tactical Mission Roster */}
+        <div className="missions-left-col">
+          <div className="mission-header-meta">
+            <span className="mission-pill-tag">GLOBAL DEPLOYMENTS</span>
+            <h1 className="mission-giant-title">MISSION CONTROL</h1>
+            <p className="mission-lead-text">
+              Tactical after-action reports, planetary coordinates, casualty mitigation data, and hero deployment logs for historic Avengers engagements.
+            </p>
+          </div>
+
+          <div className="missions-select-stack">
+            {MISSIONS_DATA.map((mission, idx) => {
+              const isSelected = selectedMissionIdx === idx;
               return (
                 <div
-                  key={m.id}
-                  className={`mission-item-card ${isSelected ? 'mission-item-card-active' : ''}`}
+                  key={mission.id}
+                  className={`mission-select-card ${isSelected ? 'mission-select-card-active' : ''}`}
                   onClick={() => {
-                    setSelectedMission(m);
+                    setSelectedMissionIdx(idx);
                     if (onPlayClick) onPlayClick();
                   }}
-                  onMouseEnter={() => {
-                    if (onPlayHover) onPlayHover();
-                  }}
-                  style={{ '--card-accent': m.accentColor } as React.CSSProperties}
+                  onMouseEnter={onPlayHover}
                 >
-                  <div className="mission-item-top">
-                    <span className="mission-code">{m.missionCode}</span>
-                    <span className={`mission-status-tag status-${m.status.toLowerCase()}`}>
-                      {m.status}
-                    </span>
+                  <div className="m-card-top">
+                    <span className="m-code">{mission.missionCode}</span>
+                    <span className={`m-status m-status-${mission.status.toLowerCase()}`}>{mission.status}</span>
                   </div>
-                  <h3 className="mission-item-title">{m.codename}</h3>
-                  <div className="mission-item-meta">
-                    <span>{m.year}</span> • <span>{m.location}</span>
-                  </div>
+                  <h3 className="m-title">{mission.codename}</h3>
+                  <div className="m-loc">{mission.location} • {mission.year}</div>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Right Column: Mission Deep Briefing Dossier */}
-        <div className="mission-briefing-column">
-          <div className="mission-briefing-card">
-            
-            <div className="briefing-header-bar">
-              <div className="b-code">{selectedMission.missionCode}</div>
-              <div className={`b-status-pill status-${selectedMission.status.toLowerCase()}`}>
-                STATUS: {selectedMission.status}
-              </div>
+        {/* Center: 3D Tactical Globe & Satellite Radar */}
+        <div className="missions-center-3d">
+          <Canvas camera={{ position: [0, 0, 4.2], fov: 42 }}>
+            <Suspense fallback={null}>
+              <ambientLight intensity={0.4} />
+              <directionalLight position={[4, 5, 4]} color={currentMission.accentColor} intensity={2.0} />
+              <directionalLight position={[-4, -3, -2]} color="#ffffff" intensity={1.5} />
+              <TacticalGlobe3D accentColor={currentMission.accentColor} isSimulating={isSimulating} />
+              <Particles />
+              <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 1.7} minPolarAngle={Math.PI / 2.5} />
+            </Suspense>
+          </Canvas>
+
+          {/* Action Trigger */}
+          <div className="stage-controls-overlay">
+            <Button
+              variant="primary"
+              onClick={triggerMissionPlayback}
+              onHoverSound={onPlayHover}
+              className="action-btn mission-btn"
+            >
+              {isSimulating ? '⚡ SIMULATING TACTICAL FLIGHT PATHS' : '▶ SIMULATE DEPLOYMENT TRAJECTORY'}
+            </Button>
+          </div>
+        </div>
+
+        {/* Right Column: Mission Briefing & Deployed Operatives */}
+        <div className="missions-right-col">
+          <div className="specs-card">
+            <div className="spec-tag">MISSION BRIEFING & OUTCOME</div>
+            <div className="mission-threat-tag"><strong>PRIMARY THREAT:</strong> {currentMission.threat}</div>
+            <p className="mission-brief-text">{currentMission.briefing}</p>
+            <div className="mission-outcome-box">
+              <span className="outcome-lbl">STRATEGIC OUTCOME:</span>
+              <p className="outcome-txt">{currentMission.outcome}</p>
             </div>
+          </div>
 
-            <h2 className="briefing-title">{selectedMission.codename}</h2>
-            
-            <div className="briefing-intel-grid">
-              <div className="intel-row">
-                <span className="i-lbl">OPERATION YEAR:</span>
-                <span className="i-val">{selectedMission.year}</span>
-              </div>
-              <div className="intel-row">
-                <span className="i-lbl">THEATRE / LOCATION:</span>
-                <span className="i-val">{selectedMission.location}</span>
-              </div>
-              <div className="intel-row">
-                <span className="i-lbl">PRIMARY THREAT:</span>
-                <span className="i-val" style={{ color: selectedMission.accentColor }}>{selectedMission.threat}</span>
-              </div>
-            </div>
-
-            <div className="briefing-section-title">TACTICAL BRIEFING</div>
-            <p className="briefing-p">{selectedMission.briefing}</p>
-
-            <div className="briefing-section-title">DEPLOYED AVENGERS ROSTER</div>
-            <div className="briefing-roster-tags">
-              {selectedMission.avengersInvolved.map((hero, hIdx) => (
-                <span key={hIdx} className="hero-deployed-badge">
-                  <span className="shield-dot">🛡️</span> {hero}
-                </span>
+          <div className="gear-specs-card">
+            <div className="spec-tag">AVENGERS DEPLOYED ({currentMission.avengersInvolved.length})</div>
+            <div className="operatives-tag-grid">
+              {currentMission.avengersInvolved.map((hero, hIdx) => (
+                <span key={hIdx} className="operative-pill">› {hero}</span>
               ))}
             </div>
+          </div>
 
-            <div className="briefing-section-title">OPERATIONAL OUTCOME</div>
-            <div className="briefing-outcome-box">
-              {selectedMission.outcome}
-            </div>
+          <div className="specs-card">
+            <div className="spec-tag">TACTICAL METRICS</div>
+            {currentMission.metrics.map((met, mIdx) => (
+              <div key={mIdx} className="stat-row">
+                <span className="s-lbl">{met.label}</span>
+                <span className="s-val">{met.value}</span>
+              </div>
+            ))}
+          </div>
 
-            <div className="briefing-metrics-grid">
-              {selectedMission.metrics.map((met, mIdx) => (
-                <div key={mIdx} className="b-metric-box">
-                  <span className="b-m-lbl">{met.label}</span>
-                  <span className="b-m-val">{met.value}</span>
-                </div>
-              ))}
-            </div>
-
+          <div className="status-badge-bar">
+            <span className="status-dot" style={{ background: currentMission.accentColor, boxShadow: `0 0 10px ${currentMission.accentColor}` }} />
+            <span className="status-txt">S.H.I.E.L.D. SECURE LOG // LEVEL 10</span>
           </div>
         </div>
 

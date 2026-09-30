@@ -13,26 +13,32 @@ export default function DoomsdayPage({
   onPlayHover,
   onPlayClick,
 }: DoomsdayPageProps) {
-  // Cinematic timeline step: 0: blackout init, 1: status prompt, 2: threat warning, 3: glitch, 4: poster reveal
+  // Cinematic Timeline Sequence:
+  // Step 0: Blackout initial entrance (0ms)
+  // Step 1: "AVENGERS INITIATIVE / ARCHIVE STATUS // CLASSIFIED" (1000ms)
+  // Step 2: "SYSTEM WARNING / THREAT SIGNATURE DETECTED" (2800ms)
+  // Step 3: Brief blackout & glitch pulse (4600ms)
+  // Step 4: Theatrical reveal of Avengers: Doomsday Image (5600ms)
+  // Step 5: "DOOMSDAY" & "COMING SOON..." fade in (7000ms)
+  // Step 6: "THE AVENGERS WILL RETURN" & "CLASSIFIED // 000" (9000ms)
   const [sequenceStep, setSequenceStep] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Step 0: Fade to black on route enter (0ms)
-    // Step 1: Status prompt appears (1000ms)
-    const t1 = setTimeout(() => setSequenceStep(1), 800);
-    // Step 2: "A NEW THREAT HAS BEEN DETECTED" (2600ms)
-    const t2 = setTimeout(() => setSequenceStep(2), 2600);
-    // Step 3: Brief Glitch & Black screen (4200ms)
-    const t3 = setTimeout(() => setSequenceStep(3), 4400);
-    // Step 4: Poster Reveal (5200ms)
-    const t4 = setTimeout(() => setSequenceStep(4), 5400);
+    const t1 = setTimeout(() => setSequenceStep(1), 1000);
+    const t2 = setTimeout(() => setSequenceStep(2), 2800);
+    const t3 = setTimeout(() => setSequenceStep(3), 4600);
+    const t4 = setTimeout(() => setSequenceStep(4), 5600);
+    const t5 = setTimeout(() => setSequenceStep(5), 7200);
+    const t6 = setTimeout(() => setSequenceStep(6), 9200);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
       clearTimeout(t4);
+      clearTimeout(t5);
+      clearTimeout(t6);
     };
   }, []);
 
@@ -52,7 +58,7 @@ export default function DoomsdayPage({
         '--mouse-y': mousePos.y,
       } as React.CSSProperties}
     >
-      {/* 3D Atmospheric Background */}
+      {/* 3D Atmospheric Depth & Floating Ash Motes */}
       <div className="doomsday-canvas-container">
         <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ antialias: true, alpha: true }}>
           <Particles />
@@ -60,12 +66,12 @@ export default function DoomsdayPage({
         </Canvas>
       </div>
 
-      {/* Atmospheric Fog & Dark Energy Overlays */}
+      {/* Atmospheric Fog, Vignette & Film Grain */}
       <div className="doomsday-fog-overlay" />
       <div
         className="doomsday-torch-light"
         style={{
-          transform: `translate(${mousePos.x * 60}px, ${mousePos.y * 60}px)`,
+          transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40}px)`,
         }}
       />
       <div className="doomsday-film-grain" />
@@ -88,15 +94,15 @@ export default function DoomsdayPage({
           {sequenceStep === 1 && (
             <div className="intro-text-block fade-in-up">
               <div className="sys-label">AVENGERS INITIATIVE</div>
-              <div className="sys-status">ARCHIVE STATUS: <span className="green-text">ACTIVE</span></div>
+              <div className="sys-status">ARCHIVE STATUS // <span className="green-text">CLASSIFIED</span></div>
             </div>
           )}
 
           {sequenceStep === 2 && (
             <div className="intro-text-block warning-glitch">
-              <div className="danger-tag">[ EMERGENCY PROTOCOL 000 ]</div>
-              <h2 className="danger-title">A NEW THREAT HAS BEEN DETECTED</h2>
-              <div className="danger-sub">CALCULATING MULTIVERSAL INCURSION COORDINATES...</div>
+              <div className="danger-tag">[ SYSTEM WARNING ]</div>
+              <h2 className="danger-title">THREAT SIGNATURE DETECTED</h2>
+              <div className="danger-sub">CALCULATING LATVIAN INCURSION SIGNATURE...</div>
             </div>
           )}
 
@@ -106,45 +112,50 @@ export default function DoomsdayPage({
         </div>
       )}
 
-      {/* Stage 4: Massive Dark Cinematic Poster Reveal */}
+      {/* Stage 4+: Theatrical Reveal of the Provided Image */}
       {sequenceStep >= 4 && (
-        <div className="doomsday-poster-stage fade-in-dramatic">
+        <div className="doomsday-theatre-reveal fade-in-dramatic">
           
-          <div className="poster-meta-top">
-            <span className="poster-classification">CLASSIFIED // LEVEL 10 EYES ONLY</span>
-            <span className="poster-year">PHASE 6 CLIMAX</span>
+          {/* Subtle Classification Tag */}
+          <div className="doomsday-stage-header">
+            <span className="doomsday-classification-tag">CLASSIFIED // LEVEL 10 EYES ONLY</span>
           </div>
 
-          {/* Monumental Title with Parallax & Specular Glint */}
+          {/* Primary Cinematic Asset: The Provided Avengers: Doomsday Image */}
           <div
-            className="doomsday-monumental-title"
+            className="doomsday-poster-wrapper"
             style={{
-              transform: `translate3d(${mousePos.x * -15}px, ${mousePos.y * -15}px, 0)`,
+              transform: `translate3d(${mousePos.x * -12}px, ${mousePos.y * -12}px, 0)`,
             }}
           >
-            <span className="title-prefix">AVENGERS</span>
-            <h1 className="title-main">DOOMSDAY</h1>
+            <div className="doomsday-backlight-aura" />
+            <img
+              src="/assets/avengers-emblem.png"
+              alt="Avengers: Doomsday"
+              className="doomsday-hero-image-asset"
+            />
           </div>
 
-          <div
-            className="poster-coming-soon"
-            style={{
-              transform: `translate3d(${mousePos.x * -8}px, ${mousePos.y * -8}px, 0)`,
-            }}
-          >
-            COMING SOON...
-          </div>
+          {/* Doomsday Typography Sequence */}
+          {sequenceStep >= 5 && (
+            <div
+              className="doomsday-text-group fade-in-up"
+              style={{
+                transform: `translate3d(${mousePos.x * -6}px, ${mousePos.y * -6}px, 0)`,
+              }}
+            >
+              <h1 className="doomsday-wordmark">DOOMSDAY</h1>
+              <div className="doomsday-coming-soon">COMING SOON...</div>
+            </div>
+          )}
 
-          {/* Interactive Tactical Dossier Preview */}
-          <div className="poster-footer-hud">
-            <div className="hud-code-bar">
-              <span className="hud-dot-crimson" />
-              <span className="hud-code-txt">LATVIAN ANOMALY DETECTED // DR. VICTOR VON DOOM</span>
+          {/* Final Return & Archive Tag */}
+          {sequenceStep >= 6 && (
+            <div className="doomsday-final-credits fade-in-slow">
+              <div className="avengers-will-return">THE AVENGERS WILL RETURN</div>
+              <div className="doomsday-classified-zero">CLASSIFIED // 000</div>
             </div>
-            <div className="hud-classified-tag">
-              CLASSIFIED // 000
-            </div>
-          </div>
+          )}
 
         </div>
       )}
